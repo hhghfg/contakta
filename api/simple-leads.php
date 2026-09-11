@@ -1,62 +1,14 @@
 <?php
-/** Simplified authenticated leads API. */
 declare(strict_types=1);
-header('Content-Type: application/json; charset=utf-8');
-header('Cache-Control: no-store');
-header('X-Content-Type-Options: nosniff');
-
-$storageDir = dirname(__FILE__) . '/../storage';
-$leadsFile = $storageDir . '/leads.json';
-
-function api_response(int $status, array $body): never {
-    http_response_code($status);
-    echo json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    exit;
-}
-function bearer_token(): string {
-    $header = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-    return preg_match('/^Bearer\s+([A-Fa-f0-9]{64})$/', trim($header), $m) === 1 ? $m[1] : '';
-}
-function verify_token(string $token, string $storageDir): bool {
-    if ($token === '') return false;
-    $sessions = json_decode((string) @file_get_contents($storageDir . '/sessions.json'), true);
-    if (!is_array($sessions) || !isset($sessions[$token]) || !is_array($sessions[$token])) return false;
-    $expires = $sessions[$token]['expires_at'] ?? 0;
-    $timestamp = is_numeric($expires) ? (int) $expires : (int) strtotime((string) $expires);
-    return $timestamp > time();
-}
-function load_leads(string $file): array {
-    $data = json_decode((string) @file_get_contents($file), true);
-    if (!is_array($data)) return [];
-    $leads = $data['leads'] ?? $data;
-    return is_array($leads) ? array_values($leads) : [];
-}
-
-if (!verify_token(bearer_token(), $storageDir)) api_response(401, ['ok' => false, 'error' => 'Unauthorized']);
-$action = $_GET['action'] ?? 'list';
-$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-
-if ($method === 'GET' && $action === 'list') {
-    $leads = load_leads($leadsFile);
-    api_response(200, ['ok' => true, 'leads' => $leads, 'total' => count($leads)]);
-}
-if ($method === 'GET' && $action === 'get') {
-    $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-    if (!$id) api_response(400, ['ok' => false, 'error' => 'Lead ID is required']);
-    foreach (load_leads($leadsFile) as $lead) {
-        if ((int) ($lead['id'] ?? 0) === $id) api_response(200, ['ok' => true, 'lead' => $lead]);
-    }
-    api_response(404, ['ok' => false, 'error' => 'Lead not found']);
-}
-if ($method === 'POST' && $action === 'delete') {
-    $input = json_decode((string) file_get_contents('php://input'), true);
-    $id = is_array($input) ? filter_var($input['lead_id'] ?? null, FILTER_VALIDATE_INT) : false;
-    if (!$id) api_response(400, ['ok' => false, 'error' => 'Lead ID is required']);
-    $leads = load_leads($leadsFile);
-    $filtered = array_values(array_filter($leads, fn(array $lead): bool => (int) ($lead['id'] ?? 0) !== $id));
-    if (count($filtered) === count($leads)) api_response(404, ['ok' => false, 'error' => 'Lead not found']);
-    $json = json_encode(['leads' => $filtered], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    if ($json === false || file_put_contents($leadsFile, $json . "\n", LOCK_EX) === false) api_response(500, ['ok' => false, 'error' => 'Could not save leads']);
-    api_response(200, ['ok' => true]);
-}
-api_response(405, ['ok' => false, 'error' => 'Method not allowed']);
+header('Content-Type: application/json; charset=utf-8');header('Cache-Control: no-store');header('X-Content-Type-Options: nosniff');header('Referrer-Policy: no-referrer');
+$storage=__DIR__.'/../storage';$file=$storage.'/leads.json';
+function finish(int $status,array $body){http_response_code($status);echo json_encode($body,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);exit;}
+function same_origin():bool{$origin=$_SERVER['HTTP_ORIGIN']??'';if($origin==='')return true;$host=strtolower((string)preg_replace('/:\d+$/','',$_SERVER['HTTP_HOST']??''));return $host!==''&&hash_equals($host,strtolower((string)parse_url($origin,PHP_URL_HOST)));}
+function bearer():string{$header=$_SERVER['HTTP_AUTHORIZATION']??'';return preg_match('/^Bearer\s+([a-f0-9]{64})$/i',trim($header),$m)===1?$m[1]:'';}
+function auth(string $storage):void{$key=bearer();$sessions=json_decode((string)@file_get_contents($storage.'/sessions.json'),true);$session=is_array($sessions)&&isset($sessions[$key])&&is_array($sessions[$key])?$sessions[$key]:null;if(!is_array($session)||(int)($session['expires_at']??0)<=time())finish(401,['ok'=>false,'error'=>'Требуется вход']);}
+function read_leads(string $file):array{$data=json_decode((string)@file_get_contents($file),true);if(!is_array($data))return [];$data=$data['leads']??$data;return is_array($data)?array_values(array_filter($data,'is_array')):[];}
+function write_leads(string $file,array $leads):void{$json=json_encode(array_values($leads),JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);if($json===false||file_put_contents($file,$json,LOCK_EX)===false)finish(500,['ok'=>false,'error'=>'Не удалось сохранить заявки']);@chmod($file,0600);}
+if(!same_origin())finish(403,['ok'=>false,'error'=>'Источник запроса не разрешён']);auth($storage);$method=$_SERVER['REQUEST_METHOD']??'GET';$action=$_GET['action']??'list';
+if($method==='GET'&&$action==='list'){$leads=read_leads($file);usort($leads,function($a,$b){return strcmp((string)($b['created_at']??''),(string)($a['created_at']??''));});finish(200,['ok'=>true,'leads'=>array_slice($leads,0,500),'total'=>count($leads)]);}
+if($method==='POST'&&in_array($action,['status','delete'],true)){$input=json_decode((string)file_get_contents('php://input'),true);$id=is_array($input)?trim((string)($input['id']??'')):'';if($id===''||strlen($id)>80)finish(400,['ok'=>false,'error'=>'Некорректный ID']);$leads=read_leads($file);$found=false;$result=[];foreach($leads as $lead){if(hash_equals((string)($lead['id']??''),$id)){$found=true;if($action==='delete')continue;$status=(string)($input['status']??'');if(!in_array($status,['new','processing','completed','rejected'],true))finish(400,['ok'=>false,'error'=>'Некорректный статус']);$lead['status']=$status;$lead['updated_at']=gmdate('c');}$result[]=$lead;}if(!$found)finish(404,['ok'=>false,'error'=>'Заявка не найдена']);write_leads($file,$result);finish(200,['ok'=>true]);}
+finish(405,['ok'=>false,'error'=>'Метод не разрешён']);

@@ -1,76 +1,15 @@
 {
-  "name": "КОНТАНТА - Система управления заявками",
-  "short_name": "КОНТАНТА",
-  "description": "Профессиональная система управления заявками по контракту на СВО",
+  "id": "/admin-app.html",
+  "name": "КОНТАНТА — защищённые заявки",
+  "short_name": "Заявки",
+  "description": "Панель обработки обращений КОНТАНТА",
   "start_url": "/admin-app.html",
   "scope": "/",
   "display": "standalone",
-  "orientation": "portrait-primary",
-  "background_color": "#0a0e27",
-  "theme_color": "#d4af37",
-  "screenshots": [
-    {
-      "src": "/images/kontanta-logo.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "form_factor": "narrow"
-    }
-  ],
+  "background_color": "#f3f4f6",
+  "theme_color": "#111827",
   "icons": [
-    {
-      "src": "/images/kontanta-logo.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/images/kontanta-logo.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/images/kontanta-logo.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
-  ],
-  "categories": ["productivity", "business"],
-  "shortcuts": [
-    {
-      "name": "Заявки",
-      "short_name": "Заявки",
-      "description": "Просмотр всех заявок",
-      "url": "/admin-app.html?tab=leads",
-      "icons": [
-        {
-          "src": "/images/kontanta-logo.png",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
-      "name": "Статистика",
-      "short_name": "Статистика",
-      "description": "Просмотр статистики",
-      "url": "/admin-app.html?tab=stats",
-      "icons": [
-        {
-          "src": "/images/kontanta-logo.png",
-          "sizes": "192x192"
-        }
-      ]
-    }
-  ],
-  "share_target": {
-    "action": "/admin-app.html",
-    "method": "POST",
-    "enctype": "application/x-www-form-urlencoded",
-    "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url"
-    }
-  }
+    {"src":"/images/kontanta-logo.png","sizes":"192x192","type":"image/png","purpose":"any"},
+    {"src":"/images/kontanta-logo.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
 }
