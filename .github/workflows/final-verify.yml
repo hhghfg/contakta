@@ -34,7 +34,7 @@ jobs:
           for app in admin-panel/backend admin-panel/frontend; do
             (
               cd "$app" || exit 1
-              npm ci --no-audit --no-fund >>"$log" 2>&1 && npm run build >>"$log" 2>&1
+              npm install --no-audit --no-fund >>"$log" 2>&1 && npm run build >>"$log" 2>&1
             ) || fail=1
           done
 
