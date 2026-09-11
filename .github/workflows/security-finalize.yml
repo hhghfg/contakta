@@ -1,0 +1,49 @@
+name: Security finalize
+
+on:
+  push:
+    paths:
+      - .github/workflows/security-finalize.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch frontend authentication
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          def rep(path, old, new):
+              p=Path(path); s=p.read_text(encoding='utf-8'); p.write_text(s.replace(old,new), encoding='utf-8')
+          rep('admin-panel/frontend/src/pages/LoginPage.tsx', '''        <p className="text-gray-400 text-sm text-center mt-6">\n          Default: admin / admin123\n        </p>\n''', '')
+          for path in ['admin-panel/frontend/src/pages/DashboardPage.tsx','admin-panel/frontend/src/pages/StatsPage.tsx']:
+              rep(path, 'fetch(`/api/simple-stats.php?token=${token}`)', 'fetch("/api/simple-stats.php", { headers: { Authorization: `Bearer ${token}` } })')
+          for path in ['admin-panel/frontend/src/pages/ApplicationsPage.tsx','admin-panel/frontend/src/pages/CallsPage.tsx']:
+              rep(path, 'fetch(`/api/simple-leads.php?token=${token}&action=list`)', 'fetch("/api/simple-leads.php?action=list", { headers: { Authorization: `Bearer ${token}` } })')
+          rep('admin-panel/frontend/src/pages/ApplicationsPage.tsx', '`/api/simple-leads.php?token=${token}&action=delete`,', '"/api/simple-leads.php?action=delete",')
+          rep('admin-panel/frontend/src/pages/ApplicationsPage.tsx', 'headers: { "Content-Type": "application/json" },', 'headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },')
+          PY
+      - name: Verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          find api -type f -name '*.php' -print0 | xargs -0 -n1 php -l
+          for app in admin-panel/backend admin-panel/frontend; do
+            (cd "$app" && npm install --no-audit --no-fund && npm run build)
+          done
+      - name: Commit and remove temporary automation
+        shell: bash
+        run: |
+          rm -f .github/workflows/security-finalize.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "fix: finalize secure authentication flow"
+          git push
