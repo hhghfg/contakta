@@ -1,0 +1,16 @@
+name: Launch homepage update
+
+on: [push]
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  launch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start prepared homepage update
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run logo-fix.yml --repo "${{ github.repository }}" --ref "${{ github.ref_name }}"
