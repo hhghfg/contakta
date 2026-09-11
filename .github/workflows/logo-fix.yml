@@ -1,30 +1,22 @@
-name: Restore homepage logos
+name: Place homepage logos
 
-on: push
+on:
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  fix-logos:
+  place-logos:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-      - name: Restore Ministry of Defence emblem
-        run: |
-          mkdir -p images
-          git fetch --depth=1 origin c65cbc165f2abf39af2cf8629147c8aec5a428f6
-          git show FETCH_HEAD:root/images/mo-emblem.png > images/mo-emblem.png
-      - name: Place both logos in the header
-        shell: bash
+      - name: Place both local logos
         run: |
           python3 - <<'PY'
           from pathlib import Path
-
-          index = Path('index.html')
-          html = index.read_text(encoding='utf-8')
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
           old = '''            <a href="#" class="logo">
                 <span class="logo-icon">К</span>
                 КОНТАНТА
@@ -36,90 +28,44 @@ jobs:
                 </a>
                 <span class="brand-divider" aria-hidden="true"></span>
                 <div class="brand-logo brand-logo-ministry">
-                    <img src="images/mo-emblem.png" alt="Министерство обороны Российской Федерации" width="56" height="56" loading="eager" decoding="async" fetchpriority="high">
+                    <img src="images/mo-emblem.svg" alt="Министерство обороны Российской Федерации" width="56" height="56" loading="eager" decoding="async" fetchpriority="high">
                     <span>Министерство обороны РФ</span>
                 </div>
             </div>'''
-          if old not in html:
-              raise SystemExit('Expected header logo markup was not found')
-          html = html.replace(old, new, 1)
-
+          if old not in s:
+              raise SystemExit('Header logo markup changed; refusing unsafe replacement')
+          s = s.replace(old, new, 1)
           css = '''
         /* Homepage partner logos */
-        .brand-logos {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            min-width: 0;
+        .brand-logos { display:flex; align-items:center; gap:14px; min-width:0; }
+        .brand-logo { display:flex; align-items:center; gap:9px; min-height:56px; color:var(--text); font-family:'Cormorant Garamond',serif; font-weight:700; line-height:1.05; text-decoration:none; }
+        .brand-logo img { display:block; flex:0 0 auto; width:56px; height:56px; object-fit:contain; }
+        .brand-logo-kontanta > span { font-size:18px; letter-spacing:-.02em; }
+        .brand-logo-ministry > span { max-width:130px; color:var(--text-secondary); font-family:'Inter',sans-serif; font-size:10px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; }
+        .brand-divider { width:1px; height:40px; background:var(--line); }
+        @media (max-width:767px) {
+            .brand-logos { gap:8px; }
+            .brand-logo { min-height:44px; }
+            .brand-logo img { width:44px; height:44px; }
+            .brand-logo-kontanta > span { font-size:16px; }
+            .brand-logo-ministry > span { display:none; }
+            .brand-divider { height:32px; }
         }
-        .brand-logo {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            min-height: 56px;
-            color: var(--text);
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 700;
-            line-height: 1.05;
-            text-decoration: none;
-        }
-        .brand-logo img {
-            display: block;
-            flex: 0 0 auto;
-            width: 56px;
-            height: 56px;
-            object-fit: contain;
-        }
-        .brand-logo-kontanta > span {
-            font-size: 18px;
-            letter-spacing: -0.02em;
-        }
-        .brand-logo-ministry > span {
-            max-width: 130px;
-            color: var(--text-secondary);
-            font-family: 'Inter', sans-serif;
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-        }
-        .brand-divider {
-            width: 1px;
-            height: 40px;
-            background: var(--line);
-        }
-        @media (max-width: 767px) {
-            .brand-logos { gap: 8px; }
-            .brand-logo { min-height: 44px; }
-            .brand-logo img { width: 44px; height: 44px; }
-            .brand-logo-kontanta > span { font-size: 16px; }
-            .brand-logo-ministry > span { display: none; }
-            .brand-divider { height: 32px; }
-        }
-        @media (max-width: 420px) {
-            .brand-logo-kontanta > span { display: none; }
-        }
+        @media (max-width:420px) { .brand-logo-kontanta > span { display:none; } }
 
 '''
-          if '/* Homepage partner logos */' not in html:
-              html = html.replace('</style>', css + '    </style>', 1)
-          index.write_text(html, encoding='utf-8')
+          s = s.replace('</style>', css + '    </style>', 1)
+          p.write_text(s, encoding='utf-8')
           PY
-      - name: Verify local logo assets and references
-        run: |
-          set -euo pipefail
           test -s images/kontanta-logo.png
-          test -s images/mo-emblem.png
-          file images/kontanta-logo.png images/mo-emblem.png | grep -c 'PNG image data' | grep -q '^2$'
+          test -s images/mo-emblem.svg
           grep -q 'src="images/kontanta-logo.png"' index.html
-          grep -q 'src="images/mo-emblem.png"' index.html
-          grep -q 'brand-logo-ministry' index.html
-          test "$(grep -o 'src="images/\(kontanta-logo\|mo-emblem\)\.png"' index.html | sort -u | wc -l)" -eq 2
-      - name: Commit and clean up
+          grep -q 'src="images/mo-emblem.svg"' index.html
+      - name: Commit verified placement and remove workflow
         run: |
           rm -f .github/workflows/logo-fix.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "fix: restore and place both homepage logos"
+          git commit -m "fix: place both logos on homepage"
           git push
