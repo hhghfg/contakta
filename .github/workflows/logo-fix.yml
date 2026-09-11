@@ -28,7 +28,7 @@ jobs:
 
           index = Path('index.html')
           html = index.read_text(encoding='utf-8')
-          old = '''            <a href="#top" class="logo">
+          old = '''            <a href="#" class="logo">
                 <span class="logo-icon">К</span>
                 КОНТАНТА
             </a>'''
@@ -45,75 +45,79 @@ jobs:
             </div>'''
           if old not in html:
               raise SystemExit('Expected header logo markup was not found')
-          index.write_text(html.replace(old, new, 1), encoding='utf-8')
+          html = html.replace(old, new, 1)
 
-          styles = Path('styles.css')
-          css = styles.read_text(encoding='utf-8')
           marker = '/* Homepage partner logos */'
-          if marker not in css:
-              css += '''\n\n/* Homepage partner logos */
-          .brand-logos {
-              display: flex;
-              align-items: center;
-              gap: 14px;
-              min-width: 0;
-          }
+          css = '''
+        /* Homepage partner logos */
+        .brand-logos {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+        }
 
-          .brand-logo {
-              display: flex;
-              align-items: center;
-              gap: 9px;
-              min-height: 56px;
-              color: var(--text);
-              font-family: 'Cormorant Garamond', serif;
-              font-weight: 700;
-              line-height: 1.05;
-              text-decoration: none;
-          }
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            min-height: 56px;
+            color: var(--text);
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            line-height: 1.05;
+            text-decoration: none;
+        }
 
-          .brand-logo img {
-              display: block;
-              flex: 0 0 auto;
-              width: 56px;
-              height: 56px;
-              object-fit: contain;
-          }
+        .brand-logo img {
+            display: block;
+            flex: 0 0 auto;
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+        }
 
-          .brand-logo-kontanta > span {
-              font-size: 18px;
-              letter-spacing: -0.02em;
-          }
+        .brand-logo-kontanta > span {
+            font-size: 18px;
+            letter-spacing: -0.02em;
+        }
 
-          .brand-logo-ministry > span {
-              max-width: 130px;
-              color: var(--text-secondary);
-              font-family: 'Inter', sans-serif;
-              font-size: 10px;
-              font-weight: 600;
-              letter-spacing: 0.04em;
-              text-transform: uppercase;
-          }
+        .brand-logo-ministry > span {
+            max-width: 130px;
+            color: var(--text-secondary);
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
 
-          .brand-divider {
-              width: 1px;
-              height: 40px;
-              background: var(--line);
-          }
+        .brand-divider {
+            width: 1px;
+            height: 40px;
+            background: var(--line);
+        }
 
-          @media (max-width: 767px) {
-              .brand-logos { gap: 8px; }
-              .brand-logo { min-height: 44px; }
-              .brand-logo img { width: 44px; height: 44px; }
-              .brand-logo-kontanta > span { font-size: 16px; }
-              .brand-logo-ministry > span { display: none; }
-              .brand-divider { height: 32px; }
-          }
+        @media (max-width: 767px) {
+            .brand-logos { gap: 8px; }
+            .brand-logo { min-height: 44px; }
+            .brand-logo img { width: 44px; height: 44px; }
+            .brand-logo-kontanta > span { font-size: 16px; }
+            .brand-logo-ministry > span { display: none; }
+            .brand-divider { height: 32px; }
+        }
 
-          @media (max-width: 420px) {
-              .brand-logo-kontanta > span { display: none; }
-          }
-          '''
-              styles.write_text(css, encoding='utf-8')
+        @media (max-width: 420px) {
+            .brand-logo-kontanta > span { display: none; }
+        }
+
+'''
+          if marker not in html:
+              if '</style>' not in html:
+                  raise SystemExit('Inline stylesheet closing tag was not found')
+              html = html.replace('</style>', css + '    </style>', 1)
+
+          index.write_text(html, encoding='utf-8')
           PY
       - name: Verify local logo assets and references
         shell: bash
@@ -124,7 +128,7 @@ jobs:
           file images/kontanta-logo.png images/mo-emblem.png | grep -c 'PNG image data' | grep -q '^2$'
           grep -q 'src="images/kontanta-logo.png"' index.html
           grep -q 'src="images/mo-emblem.png"' index.html
-          grep -q 'brand-logo-ministry' styles.css
+          grep -q 'brand-logo-ministry' index.html
           test "$(grep -o 'src="images/\(kontanta-logo\|mo-emblem\)\.png"' index.html | sort -u | wc -l)" -eq 2
       - name: Commit and remove temporary automation
         shell: bash
