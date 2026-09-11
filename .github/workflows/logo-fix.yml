@@ -1,10 +1,6 @@
 name: Restore homepage logos
 
-on:
-  push:
-    paths:
-      - .github/workflows/logo-fix.yml
-  workflow_dispatch:
+on: push
 
 permissions:
   contents: write
@@ -15,11 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
       - name: Restore Ministry of Defence emblem
         run: |
           mkdir -p images
-          git show c65cbc165f2abf39af2cf8629147c8aec5a428f6:root/images/mo-emblem.png > images/mo-emblem.png
+          git fetch --depth=1 origin c65cbc165f2abf39af2cf8629147c8aec5a428f6
+          git show FETCH_HEAD:root/images/mo-emblem.png > images/mo-emblem.png
       - name: Place both logos in the header
         shell: bash
         run: |
@@ -47,7 +44,6 @@ jobs:
               raise SystemExit('Expected header logo markup was not found')
           html = html.replace(old, new, 1)
 
-          marker = '/* Homepage partner logos */'
           css = '''
         /* Homepage partner logos */
         .brand-logos {
@@ -56,7 +52,6 @@ jobs:
             gap: 14px;
             min-width: 0;
         }
-
         .brand-logo {
             display: flex;
             align-items: center;
@@ -68,7 +63,6 @@ jobs:
             line-height: 1.05;
             text-decoration: none;
         }
-
         .brand-logo img {
             display: block;
             flex: 0 0 auto;
@@ -76,12 +70,10 @@ jobs:
             height: 56px;
             object-fit: contain;
         }
-
         .brand-logo-kontanta > span {
             font-size: 18px;
             letter-spacing: -0.02em;
         }
-
         .brand-logo-ministry > span {
             max-width: 130px;
             color: var(--text-secondary);
@@ -91,13 +83,11 @@ jobs:
             letter-spacing: 0.04em;
             text-transform: uppercase;
         }
-
         .brand-divider {
             width: 1px;
             height: 40px;
             background: var(--line);
         }
-
         @media (max-width: 767px) {
             .brand-logos { gap: 8px; }
             .brand-logo { min-height: 44px; }
@@ -106,21 +96,16 @@ jobs:
             .brand-logo-ministry > span { display: none; }
             .brand-divider { height: 32px; }
         }
-
         @media (max-width: 420px) {
             .brand-logo-kontanta > span { display: none; }
         }
 
 '''
-          if marker not in html:
-              if '</style>' not in html:
-                  raise SystemExit('Inline stylesheet closing tag was not found')
+          if '/* Homepage partner logos */' not in html:
               html = html.replace('</style>', css + '    </style>', 1)
-
           index.write_text(html, encoding='utf-8')
           PY
       - name: Verify local logo assets and references
-        shell: bash
         run: |
           set -euo pipefail
           test -s images/kontanta-logo.png
@@ -130,8 +115,7 @@ jobs:
           grep -q 'src="images/mo-emblem.png"' index.html
           grep -q 'brand-logo-ministry' index.html
           test "$(grep -o 'src="images/\(kontanta-logo\|mo-emblem\)\.png"' index.html | sort -u | wc -l)" -eq 2
-      - name: Commit and remove temporary automation
-        shell: bash
+      - name: Commit and clean up
         run: |
           rm -f .github/workflows/logo-fix.yml
           git config user.name "github-actions[bot]"
