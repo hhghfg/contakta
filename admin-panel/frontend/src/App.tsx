@@ -1,18 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
 
-import { useAuthStore } from "./context/store";
-
-// Pages
+import { useThemeStore } from "./context/store";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import ApplicationsPage from "./pages/ApplicationsPage";
+import ApplicationDetailPage from "./pages/ApplicationDetailPage";
 import CallsPage from "./pages/CallsPage";
 import StatsPage from "./pages/StatsPage";
-
-// Components
+import SettingsPage from "./pages/SettingsPage";
+import UsersPage from "./pages/UsersPage";
+import RolesPage from "./pages/RolesPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient({
@@ -24,60 +24,36 @@ const queryClient = new QueryClient({
   },
 });
 
-function AppContent() {
-  const { isAuthenticated } = useAuthStore();
-  const [theme, setTheme] = useState("light");
+function ProtectedPage({ children }: { children: React.ReactNode }) {
+  return <ProtectedRoute>{children}</ProtectedRoute>;
+}
 
-  // Apply theme to DOM
+function AppContent() {
+  const { theme, getEffectiveTheme } = useThemeStore();
+
   useEffect(() => {
-    const html = document.documentElement;
-    if (theme === "dark") {
-      html.classList.add("dark");
-    } else {
-      html.classList.remove("dark");
-    }
-  }, [theme]);
+    const root = document.documentElement;
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    const applyTheme = () => {
+      root.classList.toggle("dark", getEffectiveTheme() === "dark");
+    };
+
+    applyTheme();
+    media.addEventListener("change", applyTheme);
+    return () => media.removeEventListener("change", applyTheme);
+  }, [theme, getEffectiveTheme]);
 
   return (
     <Routes>
-      {/* Public routes */}
       <Route path="/login" element={<LoginPage />} />
-
-      {/* Protected routes */}
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <DashboardPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/applications"
-        element={
-          <ProtectedRoute>
-            <ApplicationsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/calls"
-        element={
-          <ProtectedRoute>
-            <CallsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/stats"
-        element={
-          <ProtectedRoute>
-            <StatsPage />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* Fallback */}
+      <Route path="/" element={<ProtectedPage><DashboardPage /></ProtectedPage>} />
+      <Route path="/applications" element={<ProtectedPage><ApplicationsPage /></ProtectedPage>} />
+      <Route path="/applications/:id" element={<ProtectedPage><ApplicationDetailPage /></ProtectedPage>} />
+      <Route path="/calls" element={<ProtectedPage><CallsPage /></ProtectedPage>} />
+      <Route path="/stats" element={<ProtectedPage><StatsPage /></ProtectedPage>} />
+      <Route path="/settings" element={<ProtectedPage><SettingsPage /></ProtectedPage>} />
+      <Route path="/users" element={<ProtectedPage><UsersPage /></ProtectedPage>} />
+      <Route path="/roles" element={<ProtectedPage><RolesPage /></ProtectedPage>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
@@ -85,17 +61,16 @@ function AppContent() {
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AppContent />
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          style: {
-            background: "#1f2937",
-            color: "#f3f4f6",
-          },
-        }}
-      />
-    </QueryClientProvider>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <AppContent />
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: { background: "#1f2937", color: "#f3f4f6" },
+          }}
+        />
+      </QueryClientProvider>
+    </BrowserRouter>
   );
 }

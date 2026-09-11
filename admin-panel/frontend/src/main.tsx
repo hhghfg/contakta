@@ -3,14 +3,12 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./styles/globals.css";
 
-// Register Service Worker for PWA
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/sw.js").catch((error) => {
-    console.log("Service Worker registration failed:", error);
-  });
+const root = document.getElementById("root");
+if (!root) {
+  throw new Error("Root element was not found");
 }
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+ReactDOM.createRoot(root).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
