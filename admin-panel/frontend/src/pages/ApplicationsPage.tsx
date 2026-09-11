@@ -32,7 +32,7 @@ export default function ApplicationsPage() {
 
   const fetchLeads = async () => {
     try {
-      const response = await fetch(`/api/simple-leads.php?token=${token}&action=list`);
+      const response = await fetch("/api/simple-leads.php?action=list", { headers: { Authorization: `Bearer ${token}` } });
       const data = await response.json();
 
       if (data.ok) {
@@ -51,10 +51,10 @@ export default function ApplicationsPage() {
 
     try {
       const response = await fetch(
-        `/api/simple-leads.php?token=${token}&action=delete`,
+        "/api/simple-leads.php?action=delete",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
           body: JSON.stringify({ lead_id }),
         }
       );

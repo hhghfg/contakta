@@ -32,7 +32,7 @@ export default function CallsPage() {
 
   const fetchLeads = async () => {
     try {
-      const response = await fetch(`/api/simple-leads.php?token=${token}&action=list`);
+      const response = await fetch("/api/simple-leads.php?action=list", { headers: { Authorization: `Bearer ${token}` } });
       const data = await response.json();
 
       if (data.ok) {

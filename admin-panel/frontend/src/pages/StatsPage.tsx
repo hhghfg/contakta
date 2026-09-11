@@ -29,7 +29,7 @@ export default function StatsPage() {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch(`/api/simple-stats.php?token=${token}`);
+      const response = await fetch("/api/simple-stats.php", { headers: { Authorization: `Bearer ${token}` } });
       const data = await response.json();
 
       if (data.ok) {
