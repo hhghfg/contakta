@@ -62,45 +62,7 @@ export function initializeWebSocket(io: SocketServer) {
 
     // ============ EVENT HANDLERS ============
 
-    /**
-     * Новая заявка (emit от сервера)
-     * Слушают: все операторы
-     */
-    socket.on("application:new", (data) => {
-      io.emit("application:new", data);
-    });
-
-    /**
-     * Заявка захвачена
-     * Слушают: все кроме того, кто захватил
-     */
-    socket.on("application:taken", (data) => {
-      socket.broadcast.emit("application:taken", data);
-    });
-
-    /**
-     * Заявка освобождена
-     * Слушают: все
-     */
-    socket.on("application:released", (data) => {
-      io.emit("application:released", data);
-    });
-
-    /**
-     * Статус заявки изменился
-     * Слушают: все
-     */
-    socket.on("application:status_changed", (data) => {
-      io.emit("application:status_changed", data);
-    });
-
-    /**
-     * Новый комментарий
-     * Слушают: все
-     */
-    socket.on("application:comment_added", (data) => {
-      io.emit("application:comment_added", data);
-    });
+    // Application events are emitted by trusted server services only.
 
     /**
      * Запрос уведомлений (подписка)
@@ -128,10 +90,13 @@ export function initializeWebSocket(io: SocketServer) {
      */
     socket.on("notifications:read", async (data: { notificationId: string }) => {
       try {
-        await prisma.notification.update({
-          where: { id: data.notificationId },
+        const result = await prisma.notification.updateMany({
+          where: { id: data.notificationId, userId },
           data: { readAt: new Date() },
         });
+        if (result.count === 0) {
+          return socket.emit("error", { message: "Notification not found" });
+        }
 
         io.to(`user:${userId}`).emit("notifications:marked_read", {
           notificationId: data.notificationId,

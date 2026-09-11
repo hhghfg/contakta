@@ -198,7 +198,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
       socket.on(
         "notifications:marked_read",
-        (data: { notificationId: string }) => {
+        (_data: { notificationId: string }) => {
           setUnreadCount((c) => Math.max(0, c - 1));
           queryClient.invalidateQueries({ queryKey: ["notifications"] });
         }

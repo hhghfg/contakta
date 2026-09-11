@@ -16,7 +16,7 @@ interface Lead {
 
 export default function CallsPage() {
   const navigate = useNavigate();
-  const { user, token } = useAuthStore();
+  const { token } = useAuthStore();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);

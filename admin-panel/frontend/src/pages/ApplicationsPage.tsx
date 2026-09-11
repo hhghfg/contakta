@@ -16,7 +16,7 @@ interface Lead {
 
 export default function ApplicationsPage() {
   const navigate = useNavigate();
-  const { user, token } = useAuthStore();
+  const { token } = useAuthStore();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");

@@ -4,10 +4,18 @@ import { useAuthStore } from "../context/store";
 import Layout from "../components/Layout";
 import toast from "react-hot-toast";
 
+interface Stats {
+  total: number;
+  new: number;
+  processing: number;
+  completed: number;
+  rejected: number;
+}
+
 export default function StatsPage() {
   const navigate = useNavigate();
-  const { user, token } = useAuthStore();
-  const [stats, setStats] = useState(null);
+  const { token } = useAuthStore();
+  const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

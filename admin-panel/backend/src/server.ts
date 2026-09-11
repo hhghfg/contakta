@@ -57,9 +57,10 @@ initializeWebSocket(io);
 // ============ ERROR HANDLING ============
 
 app.use((err: any, req: any, res: any, next: any) => {
-  console.error("Error:", err);
-  res.status(err.status || 500).json({
-    error: err.message || "Internal server error",
+  console.error("Unhandled request error", err);
+  const status = Number.isInteger(err?.status) ? err.status : 500;
+  res.status(status).json({
+    error: status >= 500 ? "Internal server error" : err.message,
   });
 });
 

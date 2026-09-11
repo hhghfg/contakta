@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Bell, X } from "lucide-react";
 import { useUIStore, useWebSocketStore } from "../context/store";
 import { useNotifications, useMarkNotificationAsRead } from "../hooks/queries";

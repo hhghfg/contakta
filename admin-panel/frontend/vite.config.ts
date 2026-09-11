@@ -7,7 +7,6 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.ico", "apple-touch-icon.png"],
       manifest: {
         name: "КОНТАНТА Admin Panel",
         short_name: "КОНТАНТА",
@@ -17,38 +16,6 @@ export default defineConfig({
         display: "standalone",
         scope: "/",
         start_url: "/",
-        icons: [
-          {
-            src: "/icon-192.png",
-            sizes: "192x192",
-            type: "image/png",
-            purpose: "any",
-          },
-          {
-            src: "/icon-512.png",
-            sizes: "512x512",
-            type: "image/png",
-            purpose: "any",
-          },
-          {
-            src: "/icon-192-maskable.png",
-            sizes: "192x192",
-            type: "image/png",
-            purpose: "maskable",
-          },
-        ],
-        screenshots: [
-          {
-            src: "/screenshot-1.png",
-            sizes: "540x720",
-            type: "image/png",
-          },
-          {
-            src: "/screenshot-2.png",
-            sizes: "1280x720",
-            type: "image/png",
-          },
-        ],
         categories: ["business", "productivity"],
       },
       workbox: {

@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../services/api";
-import { Application, Notification } from "../types";
 
 // ============ APPLICATIONS ============
 

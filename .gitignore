@@ -1,0 +1,18 @@
+# Secrets and runtime state
+.env
+.env.*
+!.env.example
+storage/*
+!storage/.gitkeep
+!storage/.htaccess
+
+# Dependencies and builds
+node_modules/
+dist/
+build/
+.next/
+
+# Local tooling
+.DS_Store
+Thumbs.db
+*.log
