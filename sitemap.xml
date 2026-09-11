@@ -1,18 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-  <url><loc>https://kontanta.ru/</loc><priority>1.0</priority><changefreq>weekly</changefreq><image:image><image:loc>https://kontanta.ru/images/hero-operator.jpg</image:loc></image:image></url>
-  <url><loc>https://kontanta.ru/sluzhba-po-kontraktu/</loc><priority>0.95</priority><changefreq>weekly</changefreq></url>
-  <url><loc>https://kontanta.ru/operator-bpla/</loc><priority>0.95</priority><changefreq>weekly</changefreq></url>
-  <url><loc>https://kontanta.ru/vvyplaty-po-kontraktu/</loc><priority>0.85</priority><changefreq>weekly</changefreq></url>
-  <url><loc>https://kontanta.ru/voennye-specialnosti/</loc><priority>0.85</priority><changefreq>weekly</changefreq></url>
-  <url><loc>https://kontanta.ru/kontakty/</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
-  <url><loc>https://kontanta.ru/privacy/</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://kontanta.ru/personal-data-consent/</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://kontanta.ru/terms/</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://kontanta.ru/kontrakt-s-mo-rf/</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://kontanta.ru/fpv-operator/</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://kontanta.ru/obuchenie-operatorov-bpla/</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://kontanta.ru/dokumenty-dlya-kontrakta/</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://kontanta.ru/voprosy-po-kontraktu/</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://kontanta.ru/news/</loc><priority>0.75</priority><changefreq>daily</changefreq></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://kontanta.ru/</loc><lastmod>2026-09-11</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://kontanta.ru/privacy.html</loc><lastmod>2026-09-11</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://kontanta.ru/consent.html</loc><lastmod>2026-09-11</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://kontanta.ru/cookies.html</loc><lastmod>2026-09-11</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://kontanta.ru/terms.html</loc><lastmod>2026-09-11</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
 </urlset>
