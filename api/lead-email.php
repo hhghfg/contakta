@@ -1,132 +1,31 @@
 <?php
-/**
- * API обработки заявок с отправкой на почту администратора
- * Заявки сохраняются в админку и отправляются письмом
- */
-
+declare(strict_types=1);
 header('Content-Type: application/json; charset=utf-8');
-
-// Определяем константы прямо здесь (без зависимостей)
-define('STORAGE_PATH', dirname(__FILE__) . '/../storage/');
-
-// Убеждаемся что папка storage существует
-if (!is_dir(STORAGE_PATH)) {
-    @mkdir(STORAGE_PATH, 0755, true);
-}
-
-// ============ КОНФИГ ПОЧТЫ ============
-$ADMIN_EMAIL = 'admin@example.com';  // ⚠️ ОТРЕДАКТИРУЙТЕ ЗДЕСЬ - ВАША РЕАЛЬНАЯ ПОЧТА!
-$EMAIL_METHOD = 'mail';
-
-// ============ ОСНОВНОЙ КОД ============
-
-try {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $input = json_decode(file_get_contents('php://input'), true);
-        
-        // Валидация обязательных полей
-        if (!isset($input['name']) || !isset($input['phone'])) {
-            http_response_code(400);
-            die(json_encode(['ok' => false, 'error' => 'Отсутствуют обязательные поля'], JSON_UNESCAPED_UNICODE));
-        }
-        
-        // Санитизация
-        $name = htmlspecialchars(trim($input['name']), ENT_QUOTES, 'UTF-8');
-        $phone = htmlspecialchars(trim($input['phone']), ENT_QUOTES, 'UTF-8');
-        $email = isset($input['email']) && !empty($input['email']) ? htmlspecialchars(trim($input['email']), ENT_QUOTES, 'UTF-8') : '';
-        $age = isset($input['age']) && !empty($input['age']) ? htmlspecialchars(trim($input['age']), ENT_QUOTES, 'UTF-8') : '';
-        $message = isset($input['message']) && !empty($input['message']) ? htmlspecialchars(trim($input['message']), ENT_QUOTES, 'UTF-8') : '';
-        
-        // Валидация длины
-        if (strlen($name) < 3 || strlen($name) > 100) {
-            http_response_code(400);
-            die(json_encode(['ok' => false, 'error' => 'Неверное имя (3-100 символов)'], JSON_UNESCAPED_UNICODE));
-        }
-        
-        if (strlen($phone) < 10 || strlen($phone) > 20) {
-            http_response_code(400);
-            die(json_encode(['ok' => false, 'error' => 'Неверный телефон'], JSON_UNESCAPED_UNICODE));
-        }
-        
-        if ($email && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            http_response_code(400);
-            die(json_encode(['ok' => false, 'error' => 'Неверный email'], JSON_UNESCAPED_UNICODE));
-        }
-        
-        // Проверка GDPR согласия
-        if (!isset($input['gdpr_consent']) || !$input['gdpr_consent']) {
-            http_response_code(400);
-            die(json_encode(['ok' => false, 'error' => 'Требуется согласие на обработку данных'], JSON_UNESCAPED_UNICODE));
-        }
-        
-        // Создание заявки
-        $leads_file = STORAGE_PATH . 'leads.json';
-        $leads = file_exists($leads_file) ? json_decode(file_get_contents($leads_file), true) : [];
-        if (!is_array($leads)) $leads = [];
-        
-        $lead_id = 'lead_' . date('YmdHis') . '_' . bin2hex(random_bytes(4));
-        
-        $lead = [
-            'id' => $lead_id,
-            'name' => $name,
-            'phone' => $phone,
-            'email' => $email,
-            'age' => $age,
-            'message' => $message,
-            'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
-            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown',
-            'status' => 'new',
-            'created_at' => date('c'),
-            'gdpr_consent' => true
-        ];
-        
-        // Сохраняем заявку
-        $leads[] = $lead;
-        @file_put_contents($leads_file, json_encode($leads, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), LOCK_EX);
-        
-        // Отправляем письма
-        $admin_notified = false;
-        $client_notified = false;
-        
-        // Письмо администратору
-        if (!empty($ADMIN_EMAIL) && filter_var($ADMIN_EMAIL, FILTER_VALIDATE_EMAIL)) {
-            $subject = '[КОНТАНТА] Новая заявка от ' . $name;
-            $body = "Имя: $name\nТелефон: $phone\nEmail: $email\nВозраст: $age\nСообщение: $message\n\nIP: " . $_SERVER['REMOTE_ADDR'];
-            $headers = "From: noreply@contanta.ru\r\nContent-Type: text/plain; charset=UTF-8\r\n";
-            $admin_notified = @mail($ADMIN_EMAIL, $subject, $body, $headers);
-        }
-        
-        // Письмо клиенту (если есть email)
-        if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $subject = 'Спасибо за вашу заявку - КОНТАНТА';
-            $body = "Спасибо, что вы оставили заявку! Наш специалист свяжется с вами в течение 30 минут.";
-            $headers = "From: noreply@contanta.ru\r\nContent-Type: text/plain; charset=UTF-8\r\n";
-            $client_notified = @mail($email, $subject, $body, $headers);
-        }
-        
-        http_response_code(201);
-        echo json_encode([
-            'ok' => true,
-            'lead_id' => $lead_id,
-            'message' => 'Заявка успешно принята',
-            'admin_notified' => $admin_notified,
-            'client_notified' => $client_notified
-        ], JSON_UNESCAPED_UNICODE);
-        exit;
-        
-    } else {
-        http_response_code(405);
-        die(json_encode(['ok' => false, 'error' => 'Метод не разрешен'], JSON_UNESCAPED_UNICODE));
-    }
-    
-} catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode([
-        'ok' => false,
-        'error' => 'Ошибка сервера',
-        'detail' => $e->getMessage()
-    ], JSON_UNESCAPED_UNICODE);
-    exit;
-}
-
-?>
+header('Cache-Control: no-store');
+header('X-Content-Type-Options: nosniff');
+header('Referrer-Policy: no-referrer');
+const CONSENT_VERSION = '2026-09-11';
+const RETENTION_SECONDS = 7776000; // 90 days
+const MAX_BODY = 16384;
+const STORAGE_PATH = __DIR__ . '/../storage/';
+function out(int $code, array $data): never { http_response_code($code); echo json_encode($data, JSON_UNESCAPED_UNICODE); exit; }
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') out(405, ['ok'=>false,'error'=>'Метод не разрешён']);
+if ((int)($_SERVER['CONTENT_LENGTH'] ?? 0) > MAX_BODY) out(413, ['ok'=>false,'error'=>'Слишком большой запрос']);
+$host = strtolower(preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST'] ?? ''));
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+if ($origin !== '') { $ohost = strtolower((string)parse_url($origin, PHP_URL_HOST)); if ($host === '' || !hash_equals($host, $ohost)) out(403, ['ok'=>false,'error'=>'Источник запроса не разрешён']); }
+$type = strtolower($_SERVER['CONTENT_TYPE'] ?? '');
+if (str_contains($type, 'application/json')) { $raw=file_get_contents('php://input'); $input=json_decode($raw ?: '', true); if (!is_array($input)) out(400,['ok'=>false,'error'=>'Некорректный JSON']); } else { $input=$_POST; }
+if (!empty($input['website'])) out(201, ['ok'=>true,'message'=>'Заявка принята']);
+if (($input['pd_consent'] ?? '') !== '1' || ($input['adult_confirmed'] ?? '') !== '1' || ($input['consent_version'] ?? '') !== CONSENT_VERSION) out(400,['ok'=>false,'error'=>'Необходимо отдельное согласие и подтверждение возраста']);
+$name=trim((string)($input['name'] ?? '')); $phone=trim((string)($input['phone'] ?? '')); $message=trim((string)($input['message'] ?? ''));
+if (mb_strlen($name)<2 || mb_strlen($name)>100) out(400,['ok'=>false,'error'=>'Проверьте имя']);
+$digits=preg_replace('/\D+/', '', $phone); if (strlen($digits)<10 || strlen($digits)>15) out(400,['ok'=>false,'error'=>'Проверьте телефон']);
+if (mb_strlen($message)>1000) out(400,['ok'=>false,'error'=>'Сообщение слишком длинное']);
+if (!is_dir(STORAGE_PATH) && !mkdir(STORAGE_PATH,0700,true) && !is_dir(STORAGE_PATH)) out(500,['ok'=>false,'error'=>'Ошибка сервера']);
+$now=time(); $secret=getenv('APP_SECRET') ?: hash('sha256', __FILE__); $ip=(string)($_SERVER['REMOTE_ADDR'] ?? ''); $key=hash_hmac('sha256',$ip,$secret); $rateFile=STORAGE_PATH.'rate-limits.json';
+$rf=@fopen($rateFile,'c+'); if (!$rf) out(500,['ok'=>false,'error'=>'Ошибка сервера']); flock($rf,LOCK_EX); $rate=json_decode(stream_get_contents($rf) ?: '[]',true); if(!is_array($rate))$rate=[]; foreach($rate as $k=>$v){$rate[$k]=array_values(array_filter((array)$v,fn($t)=>$t>$now-3600));if(!$rate[$k])unset($rate[$k]);} if(count($rate[$key]??[])>=5){flock($rf,LOCK_UN);fclose($rf);out(429,['ok'=>false,'error'=>'Слишком много запросов. Повторите позже']);}$rate[$key][]=$now;ftruncate($rf,0);rewind($rf);fwrite($rf,json_encode($rate));fflush($rf);flock($rf,LOCK_UN);fclose($rf);@chmod($rateFile,0600);
+$file=STORAGE_PATH.'leads.json'; $fh=@fopen($file,'c+'); if(!$fh)out(500,['ok'=>false,'error'=>'Ошибка сервера']);flock($fh,LOCK_EX);$leads=json_decode(stream_get_contents($fh)?:'[]',true);if(!is_array($leads))$leads=[];$leads=array_values(array_filter($leads,fn($x)=>isset($x['created_at'])&&strtotime((string)$x['created_at'])>$now-RETENTION_SECONDS));
+$id='lead_'.gmdate('YmdHis').'_' . bin2hex(random_bytes(4)); $lead=['id'=>$id,'name'=>$name,'phone'=>$phone,'message'=>$message,'status'=>'new','created_at'=>gmdate('c'),'consent'=>['accepted'=>true,'version'=>CONSENT_VERSION,'accepted_at'=>gmdate('c'),'source'=>'website_form'],'adult_confirmed'=>true];$leads[]=$lead;ftruncate($fh,0);rewind($fh);fwrite($fh,json_encode($leads,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));fflush($fh);flock($fh,LOCK_UN);fclose($fh);@chmod($file,0600);
+$admin=getenv('ADMIN_EMAIL') ?: ''; if($admin && filter_var($admin,FILTER_VALIDATE_EMAIL)){ $safeName=str_replace(["\r","\n"],' ',$name); $subject='[КОНТАНТА] Новая заявка'; $body="ID: $id\nИмя: $safeName\nТелефон: $phone\nВопрос: $message\nСогласие: ".CONSENT_VERSION; @mail($admin,$subject,$body,"Content-Type: text/plain; charset=UTF-8\r\n"); }
+out(201,['ok'=>true,'message'=>'Заявка принята. Специалист свяжется с вами.']);
