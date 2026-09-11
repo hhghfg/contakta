@@ -1,0 +1,66 @@
+name: Verify fixes
+
+on:
+  push:
+    paths:
+      - .github/workflows/verify-fixes.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run verification
+        shell: bash
+        run: |
+          set +e
+          REPORT=VERIFY_RESULTS.md
+          echo '# Verification results' > "$REPORT"
+          echo >> "$REPORT"
+
+          echo '## PHP syntax' >> "$REPORT"
+          php_fail=0
+          while IFS= read -r -d '' file; do
+            output=$(php -l "$file" 2>&1)
+            if [ $? -ne 0 ]; then
+              php_fail=1
+              printf '\n### `%s`\n```text\n%s\n```\n' "$file" "$output" >> "$REPORT"
+            fi
+          done < <(find . -type f -name '*.php' -not -path './.git/*' -print0)
+          [ $php_fail -eq 0 ] && echo 'Passed.' >> "$REPORT"
+
+          for app in admin-panel/backend admin-panel/frontend; do
+            echo -e "\n## $app" >> "$REPORT"
+            (
+              cd "$app" || exit 1
+              npm install --no-audit --no-fund >/tmp/install.log 2>&1
+              install_code=$?
+              npm run build >/tmp/build.log 2>&1
+              build_code=$?
+              printf 'Install: `%s`; build: `%s`\n' "$install_code" "$build_code" >> "$GITHUB_WORKSPACE/$REPORT"
+              if [ $install_code -ne 0 ]; then
+                echo '```text' >> "$GITHUB_WORKSPACE/$REPORT"
+                tail -n 120 /tmp/install.log >> "$GITHUB_WORKSPACE/$REPORT"
+                echo '```' >> "$GITHUB_WORKSPACE/$REPORT"
+              fi
+              if [ $build_code -ne 0 ]; then
+                echo '```text' >> "$GITHUB_WORKSPACE/$REPORT"
+                tail -n 200 /tmp/build.log >> "$GITHUB_WORKSPACE/$REPORT"
+                echo '```' >> "$GITHUB_WORKSPACE/$REPORT"
+              fi
+            )
+          done
+
+      - name: Commit verification report
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add VERIFY_RESULTS.md
+          git commit -m "chore: add verification results"
+          git push
