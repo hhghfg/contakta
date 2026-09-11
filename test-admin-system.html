@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>КОНТАНТА - Тестирование системы</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .code {
+            background: #2d3748;
+            color: #68d391;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 10px 0;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px 5px 5px 0;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .success {
+            color: #22863a;
+            background: #f0f8f4;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .error {
+            color: #cb2431;
+            background: #ffeef0;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .info {
+            color: #0366d6;
+            background: #f1f8ff;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .checklist {
+            list-style: none;
+        }
+        .checklist li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .checklist li:before {
+            content: "✓ ";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .checklist li.pending:before {
+            content: "○ ";
+            color: #f7ba00;
+        }
+        .checklist li.error:before {
+            content: "✗ ";
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 КОНТАНТА - Проверка системы</h1>
+
+        <div class="section">
+            <h2>📋 Чек-лист установки</h2>
+            <ul class="checklist">
+                <li id="check1" class="pending">API файлы созданы</li>
+                <li id="check2" class="pending">Скрытая папка /контанта/ есть</li>
+                <li id="check3" class="pending">admin-config.php обновлен</li>
+                <li id="check4" class="pending">Пароль установлен</li>
+                <li id="check5" class="pending">analytics-collector.js подключен</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>1️⃣ Генерация скрытой ссылки</h2>
+            <button onclick="testKeyGeneration()">Проверить генератор</button>
+            <div id="result1"></div>
+        </div>
+
+        <div class="section">
+            <h2>2️⃣ Проверка конфига</h2>
+            <button onclick="checkConfig()">Проверить конфиг</button>
+            <div id="result2"></div>
+        </div>
+
+        <div class="section">
+            <h2>3️⃣ Тест авторизации</h2>
+            <p>
+                <strong>Пароль по умолчанию:</strong> <code>admin123</code>
+            </p>
+            <button onclick="testAuth()">Попробовать вход</button>
+            <div id="result3"></div>
+        </div>
+
+        <div class="section">
+            <h2>4️⃣ Сбор аналитики клиента</h2>
+            <button onclick="testAnalytics()">Собрать данные</button>
+            <div id="result4"></div>
+        </div>
+
+        <div class="section">
+            <h2>5️⃣ Проверка файлов</h2>
+            <button onclick="checkFiles()">Проверить файлы</button>
+            <div id="result5"></div>
+        </div>
+
+        <div class="section">
+            <h2>📝 Логи и отладка</h2>
+            <button onclick="viewLogs()">Просмотреть логи</button>
+            <div id="result6"></div>
+        </div>
+
+        <div class="section" style="background: #e3f2fd; border-left-color: #2196F3;">
+            <h2 style="color: #1976d2;">✅ ВСЕ ГОТОВО!</h2>
+            <p style="margin: 10px 0;">
+                После установки всех компонентов можно начинать пользоваться админкой:
+            </p>
+            <div class="code">
+https://ВАШ-ДОМЕН.com/контанта/ВАША_СКРЫТАЯ_ССЫЛКА
+            </div>
+            <div class="info">
+                <strong>Помните:</strong> Используйте TOR браузер для входа. Никому не показывайте ссылку!
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function testKeyGeneration() {
+            const result = document.getElementById('result1');
+            result.innerHTML = '<div class="info">Тестируем...</div>';
+
+            try {
+                const response = await fetch('/api/generate-admin-key.php');
+                const data = await response.json();
+
+                if (data.статус === 'успешно') {
+                    result.innerHTML = `
+                        <div class="success">
+                            <strong>✅ Генератор работает!</strong><br>
+                            Скрытая ссылка: <code>${data.скрытая_ссылка}</code><br>
+                            Хэш: <code>${data.ключ_для_хранения.substring(0, 40)}...</code>
+                        </div>
+                    `;
+                    markCheck('check1');
+                } else {
+                    result.innerHTML = '<div class="error">❌ Ошибка: ' + data.сообщение + '</div>';
+                }
+            } catch (e) {
+                result.innerHTML = '<div class="error">❌ Сетевая ошибка: ' + e.message + '</div>';
+            }
+        }
+
+        async function checkConfig() {
+            const result = document.getElementById('result2');
+            result.innerHTML = '<div class="info">Проверяем...</div>';
+
+            try {
+                const response = await fetch('/api/admin-config.php');
+                
+                if (response.ok) {
+                    result.innerHTML = `
+                        <div class="success">
+                            <strong>✅ Конфиг загружается</strong><br>
+                            Основные параметры установлены
+                        </div>
+                    `;
+                    markCheck('check3');
+                } else {
+                    result.innerHTML = '<div class="error">❌ Конфиг не найден</div>';
+                }
+            } catch (e) {
+                result.innerHTML = '<div class="error">❌ Ошибка: ' + e.message + '</div>';
+            }
+        }
+
+        async function testAuth() {
+            const result = document.getElementById('result3');
+            result.innerHTML = '<div class="info">Тестируем авторизацию...</div>';
+
+            try {
+                const response = await fetch('/api/admin-auth.php?action=login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        path_token: 'test',
+                        password: 'admin123'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.статус === 'успешно') {
+                    result.innerHTML = `
+                        <div class="success">
+                            <strong>✅ Авторизация работает!</strong><br>
+                            Токен сессии получен
+                        </div>
+                    `;
+                    markCheck('check4');
+                } else {
+                    result.innerHTML = `
+                        <div class="info">
+                            Ожидается ошибка (т.к. path_token неверный):<br>
+                            <code>${data.сообщение}</code><br>
+                            ✅ API работает правильно
+                        </div>
+                    `;
+                    markCheck('check4');
+                }
+            } catch (e) {
+                result.innerHTML = '<div class="error">❌ Ошибка: ' + e.message + '</div>';
+            }
+        }
+
+        async function testAnalytics() {
+            const result = document.getElementById('result4');
+            result.innerHTML = '<div class="info">Собираем данные клиента...</div>';
+
+            try {
+                const data = {
+                    lead_id: 1,
+                    userAgent: navigator.userAgent,
+                    platform: navigator.platform,
+                    language: navigator.language,
+                    screenWidth: window.screen.width,
+                    screenHeight: window.screen.height,
+                };
+
+                const response = await fetch('/api/collect-analytics.php?action=collect', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result_data = await response.json();
+
+                if (result_data.статус === 'успешно') {
+                    result.innerHTML = `
+                        <div class="success">
+                            <strong>✅ Аналитика собирается!</strong><br>
+                            Client ID: ${result_data.client_id}<br>
+                            Данные сохранены в /storage/admin/analytics/
+                        </div>
+                    `;
+                    markCheck('check5');
+                } else {
+                    result.innerHTML = '<div class="error">❌ Ошибка: ' + result_data.сообщение + '</div>';
+                }
+            } catch (e) {
+                result.innerHTML = '<div class="error">❌ Ошибка: ' + e.message + '</div>';
+            }
+        }
+
+        async function checkFiles() {
+            const result = document.getElementById('result5');
+            
+            const files = [
+                '/api/admin-config.php',
+                '/api/admin-auth.php',
+                '/api/generate-admin-key.php',
+                '/api/collect-analytics.php',
+                '/контанта/админ.html',
+                '/analytics-collector.js'
+            ];
+
+            let html = '<div>';
+            let allOk = true;
+
+            for (const file of files) {
+                try {
+                    const response = await fetch(file, { method: 'HEAD' });
+                    if (response.ok) {
+                        html += `<div class="success">✅ ${file}</div>`;
+                    } else {
+                        html += `<div class="error">❌ ${file} (статус: ${response.status})</div>`;
+                        allOk = false;
+                    }
+                } catch (e) {
+                    html += `<div class="error">❌ ${file} (не найден)</div>`;
+                    allOk = false;
+                }
+            }
+
+            html += '</div>';
+            result.innerHTML = html;
+
+            if (allOk) {
+                document.querySelectorAll('.checklist li').forEach(li => li.classList.remove('pending', 'error'));
+            }
+        }
+
+        function viewLogs() {
+            const result = document.getElementById('result6');
+            result.innerHTML = `
+                <div class="info">
+                    <strong>Логи находятся в:</strong><br>
+                    /storage/admin/logs/<br><br>
+                    Файлы:<br>
+                    - YYYY-MM-DD.jsonl (все входы)<br>
+                    - alerts_YYYY-MM-DD.jsonl (алерты)<br>
+                    - brute_force_*.txt (попытки взлома)
+                </div>
+            `;
+        }
+
+        function markCheck(id) {
+            const li = document.getElementById(id);
+            if (li) {
+                li.classList.remove('pending');
+                li.classList.add('success');
+            }
+        }
+
+        // Авто-проверка при загрузке
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                checkFiles();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

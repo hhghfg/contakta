@@ -1,0 +1,253 @@
+// КОНТАНТА Admin Panel - Database Schema
+// PostgreSQL with Prisma ORM
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============== USERS & AUTHENTICATION ==============
+
+model User {
+  id                String      @id @default(cuid())
+  username          String      @unique
+  email             String      @unique
+  passwordHash      String
+  fullName          String?
+  role              Role?       @relation(fields: [roleId], references: [id])
+  roleId            String?
+  status            UserStatus  @default(ACTIVE)
+  themePreference   Theme       @default(SYSTEM)
+  soundNotifications Boolean    @default(true)
+  pollingInterval   Int         @default(60) // seconds
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  lastLoginAt       DateTime?
+  lastLoginIp       String?
+  lastLoginUserAgent String?
+
+  // Relations
+  applications      Application[]
+  comments          ApplicationComment[]
+  statusChanges     ApplicationStatusHistory[]
+  notifications     Notification[]
+  pushSubscriptions PushSubscription[]
+  auditLogs         AuditLog[]
+
+  @@index([roleId])
+  @@index([status])
+  @@map("users")
+}
+
+enum UserStatus {
+  ACTIVE
+  BLOCKED
+  DELETED
+}
+
+enum Theme {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
+// ============== ROLES & PERMISSIONS ==============
+
+model Role {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  hierarchy   Int      @default(0) // 0 = superadmin, 1 = admin, 2 = moderator, 3 = operator
+  isSystem    Boolean  @default(false) // Cannot be deleted
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  users       User[]
+  permissions RolePermission[]
+  auditLogs   AuditLog[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  category    String   // "applications", "users", "roles", "system", "reports"
+  createdAt   DateTime @default(now())
+
+  // Relations
+  roles       RolePermission[]
+
+  @@index([category])
+  @@map("permissions")
+}
+
+model RolePermission {
+  id           String   @id @default(cuid())
+  role         Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId       String
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  permissionId String
+  createdAt    DateTime @default(now())
+
+  @@unique([roleId, permissionId])
+  @@index([roleId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+// ============== APPLICATIONS ==============
+
+model Application {
+  id            String   @id @default(cuid())
+  clientName    String
+  clientPhone   String
+  clientEmail   String
+  category      String
+  description   String   @db.Text
+  attachmentUrl String?
+  
+  status        ApplicationStatus @default(NEW)
+  priority      Int               @default(0)
+  
+  // Capture/Assignment
+  assignedTo    User?    @relation(fields: [assignedToId], references: [id], onDelete: SetNull)
+  assignedToId  String?
+  assignedAt    DateTime?
+  version       Int      @default(0) // For optimistic locking
+  
+  // Metadata
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  resolvedAt    DateTime?
+
+  // Relations
+  comments      ApplicationComment[]
+  statusHistory ApplicationStatusHistory[]
+  notifications Notification[]
+
+  @@index([status])
+  @@index([assignedToId])
+  @@index([createdAt])
+  @@index([status, assignedToId])
+  @@map("applications")
+}
+
+enum ApplicationStatus {
+  NEW
+  IN_PROGRESS
+  AWAITING_CLIENT
+  RESOLVED
+  CLOSED
+  REJECTED
+}
+
+model ApplicationComment {
+  id            String   @id @default(cuid())
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  applicationId String
+  author        User     @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  authorId      String
+  content       String   @db.Text
+  isInternal    Boolean  @default(true) // Not visible to client
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([applicationId])
+  @@index([authorId])
+  @@map("application_comments")
+}
+
+model ApplicationStatusHistory {
+  id            String   @id @default(cuid())
+  application   Application     @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  applicationId String
+  changedBy     User     @relation(fields: [changedById], references: [id], onDelete: Restrict)
+  changedById   String
+  oldStatus     ApplicationStatus
+  newStatus     ApplicationStatus
+  reason        String?
+  createdAt     DateTime @default(now())
+
+  @@index([applicationId])
+  @@index([changedById])
+  @@map("application_status_history")
+}
+
+// ============== NOTIFICATIONS ==============
+
+model Notification {
+  id            String   @id @default(cuid())
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  application   Application? @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  applicationId String?
+  
+  type          NotificationType
+  title         String
+  message       String
+  payload       Json? // Additional data
+  
+  readAt        DateTime?
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
+  @@index([readAt])
+  @@index([createdAt])
+  @@index([userId, readAt])
+  @@map("notifications")
+}
+
+enum NotificationType {
+  NEW_APPLICATION
+  APPLICATION_ASSIGNED
+  APPLICATION_RELEASED
+  APPLICATION_STATUS_CHANGED
+  APPLICATION_COMMENTED
+  SYSTEM_MESSAGE
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  endpoint  String
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, endpoint])
+  @@index([userId])
+  @@map("push_subscriptions")
+}
+
+// ============== AUDIT LOGGING ==============
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+  userId    String
+  role      Role?    @relation(fields: [roleId], references: [id], onDelete: SetNull)
+  roleId    String?
+  
+  action    String   // "CREATE_USER", "DELETE_USER", "EDIT_APPLICATION", etc.
+  resource  String   // "User", "Application", "Role", etc.
+  resourceId String?
+  
+  changes   Json?    // Old and new values
+  ipAddress String
+  userAgent String?
+  
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}

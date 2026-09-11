@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0B1220">
+    <meta name="description" content="КОНТАНТА — контрактная служба при СВО. Полная информация и юридическая поддержка.">
+    <link rel="icon" type="image/png" href="images/kontanta-logo.png">
+    <title>КОНТАНТА | Контрактная служба</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        :root {
+            --base: #0B1220;
+            --surface: #121A2B;
+            --surface-2: #1A2438;
+            --line: #2A3650;
+            --primary: #3A6FB0;
+            --gold: #C6A15B;
+            --text: #F2F4F8;
+            --text-secondary: #9AA6BC;
+            --tri-red: #8B2A2A;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-optical-sizing: auto;
+            overflow-x: clip;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--base);
+            color: var(--text);
+            line-height: 1.5;
+            font-size: 16px;
+            font-weight: 400;
+            overflow-x: clip;
+        }
+
+        ::selection { background: var(--gold); color: var(--base); }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--surface); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+        header {
+            background: var(--base);
+            border-bottom: 1px solid var(--line);
+            padding: 12px 16px;
+            padding-inline: max(16px, env(safe-area-inset-left), env(safe-area-inset-right));
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+        }
+
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 44px;
+        }
+
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            background: var(--primary);
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--gold);
+            font-size: 13px;
+        }
+
+        nav { display: none; }
+
+        @media (min-width: 1024px) {
+            nav {
+                display: flex;
+                gap: 24px;
+                align-items: center;
+            }
+            nav a {
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.05em;
+                text-decoration: none;
+                color: var(--text-secondary);
+                transition: color 200ms ease-out;
+                text-transform: uppercase;
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+            }
+            nav a:hover { color: var(--gold); }
+        }
+
+        .hero {
+            background: var(--base);
+            position: relative;
+            padding: 20px 16px;
+            padding-inline: max(16px, env(safe-area-inset-left), env(safe-area-inset-right));
+            min-height: 100svh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        @media (min-width: 768px) {
+            .hero { padding: 40px 32px; }
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('images/hero-operator.jpg') center / cover no-repeat;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 1;
+            filter: brightness(1.2) contrast(1.1);
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--base) 0%, rgba(11,18,32,0.95) 50%, rgba(11,18,32,0.7) 100%);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            max-width: 720px;
+            text-align: left;
+        }
+
+        .hero-subtitle {
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            animation: slideUp 600ms ease-out both;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            max-width: 100%;
+        }
+
+        .hero-logos-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            min-width: 0;
+        }
+
+        @media (min-width: 480px) {
+            .hero-logos-container { gap: 10px; }
+        }
+
+        @media (min-width: 768px) {
+            .hero-logos-container { gap: 12px; }
+        }
+
+        .hero-logo-item {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-logo-mo {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 4px rgba(198, 161, 91, 0.2));
+        }
+
+        @media (min-width: 480px) {
+            .hero-logo-mo { width: 40px; height: 40px; }
+        }
+
+        @media (min-width: 768px) {
+            .hero-logo-mo { width: 50px; height: 50px; }
+        }
+
+        .hero-logo-kontanta {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 6px rgba(58, 111, 176, 0.4)) brightness(1.1);
+        }
+
+        @media (min-width: 480px) {
+            .hero-logo-kontanta { width: 36px; height: 36px; }
+        }
+
+        @media (min-width: 768px) {
+            .hero-logo-kontanta { width: 45px; height: 45px; }
+        }
+
+        .hero-subtitle-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+
+        .hero-subtitle-label {
+            font-size: 9px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            line-height: 1;
+        }
+
+        .hero-subtitle-org {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            color: var(--text);
+            line-height: 1.2;
+            word-break: break-word;
+        }
+
+        @media (min-width: 480px) {
+            .hero-subtitle-org { font-size: 13px; }
+        }
+
+        @media (min-width: 768px) {
+            .hero-subtitle-org { font-size: 14px; }
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 0.95;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            margin-bottom: 16px;
+            animation: slideUp 600ms ease-out both;
+            animation-delay: 100ms;
+        }
+
+        @media (min-width: 480px) {
+            .hero h1 { font-size: 64px; }
+        }
+
+        @media (min-width: 768px) {
+            .hero h1 { font-size: 96px; margin-bottom: 24px; }
+        }
+
+        @media (min-width: 1024px) {
+            .hero h1 { font-size: 120px; }
+        }
+
+        .hero h1 span {
+            color: var(--gold);
+            font-weight: 500;
+            font-size: 0.5em;
+            vertical-align: super;
+            margin-left: 0.15em;
+        }
+
+        .hero-description {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text);
+            margin-bottom: 20px;
+            max-width: 65ch;
+            animation: slideUp 600ms ease-out both;
+            animation-delay: 200ms;
+        }
+
+        @media (min-width: 768px) {
+            .hero-description { font-size: 16px; margin-bottom: 28px; }
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            animation: slideUp 600ms ease-out both;
+            animation-delay: 300ms;
+        }
+
+        @media (min-width: 768px) {
+            .hero-buttons { gap: 12px; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn {
+            padding: 14px 20px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 200ms ease-out;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .btn-primary {
+            background: var(--text);
+            color: var(--base);
+            width: 100%;
+            justify-content: space-between;
+            padding: 14px 20px;
+        }
+
+        .btn-primary::after {
+            content: '●';
+            color: var(--gold);
+            font-size: 7px;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.96);
+            opacity: 0.9;
+        }
+
+        @media (hover: hover) {
+            .btn-primary:hover {
+                box-shadow: 0 8px 24px rgba(242, 244, 248, 0.1);
+                transform: translateY(-2px);
+            }
+        }
+
+        .btn-secondary {
+            background: rgba(58, 111, 176, 0.12);
+            color: var(--text);
+            width: 100%;
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:active {
+            transform: scale(0.96);
+            opacity: 0.8;
+        }
+
+        @media (hover: hover) {
+            .btn-secondary:hover {
+                background: rgba(58, 111, 176, 0.2);
+                transform: translateY(-2px);
+            }
+        }
+
+        .btn-tertiary {
+            background: transparent;
+            color: var(--text-secondary);
+            padding: 10px 0;
+            border: none;
+            font-size: 12px;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: auto;
+            justify-content: flex-start;
+            margin-top: 8px;
+        }
+
+        .btn-tertiary::after { content: '→'; }
+
+        @media (hover: hover) {
+            .btn-tertiary:hover { color: var(--gold); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin-inline: auto;
+            padding-inline: 16px;
+            padding-inline: max(16px, env(safe-area-inset-left), env(safe-area-inset-right));
+        }
+
+        @media (min-width: 768px) {
+            .container { padding-inline: 32px; }
+        }
+
+        section {
+            padding-block: 40px;
+            background: var(--base);
+            border-bottom: 1px solid var(--line);
+        }
+
+        @media (min-width: 768px) {
+            section { padding-block: 80px; }
+        }
+
+        section:nth-child(even) {
+            background: var(--surface);
+        }
+
+        .section-header {
+            margin-bottom: 32px;
+            animation: slideUp 600ms ease-out both;
+        }
+
+        @media (min-width: 768px) {
+            .section-header { margin-bottom: 48px; }
+        }
+
+        .section-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 40px;
+            font-weight: 600;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .section-header h2 { font-size: 64px; margin-bottom: 16px; }
+        }
+
+        .section-header h2 span { color: var(--gold); }
+
+        .section-header p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            max-width: 65ch;
+            line-height: 1.6;
+        }
+
+        @media (min-width: 768px) {
+            .section-header p { font-size: 16px; }
+        }
+
+        .payouts-table {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        @media (min-width: 480px) {
+            .payouts-table { grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
+        }
+
+        @media (min-width: 1024px) {
+            .payouts-table { grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+        }
+
+        .payout-item {
+            padding: 12px 14px;
+            background: var(--surface-2);
+            border-left: 3px solid var(--primary);
+            border-radius: 4px;
+            transition: all 200ms ease-out;
+            animation: slideUp 600ms ease-out both;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        @media (min-width: 480px) {
+            .payout-item { padding: 16px; }
+        }
+
+        .payout-item:nth-child(1) { animation-delay: 50ms; }
+        .payout-item:nth-child(2) { animation-delay: 100ms; }
+        .payout-item:nth-child(3) { animation-delay: 150ms; }
+        .payout-item:nth-child(4) { animation-delay: 200ms; }
+
+        @media (hover: hover) {
+            .payout-item:hover {
+                border-left-color: var(--gold);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        .payout-item:active { transform: scale(0.98); }
+
+        .payout-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            line-height: 1.2;
+            word-break: break-word;
+        }
+
+        @media (min-width: 480px) {
+            .payout-label { font-size: 11px; margin-bottom: 8px; }
+        }
+
+        .payout-amount {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--gold);
+            margin-bottom: 6px;
+            line-height: 1;
+            word-break: break-word;
+        }
+
+        @media (min-width: 480px) {
+            .payout-amount { font-size: 32px; margin-bottom: 8px; }
+        }
+
+        @media (min-width: 768px) {
+            .payout-amount { font-size: 40px; }
+        }
+
+        .payout-description {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        @media (min-width: 480px) {
+            .payout-description { font-size: 12px; line-height: 1.5; }
+        }
+
+        .total-section {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        @media (min-width: 768px) {
+            .total-section { grid-template-columns: 2fr 1fr; gap: 24px; align-items: flex-end; }
+        }
+
+        .total-info p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
+
+        @media (min-width: 768px) {
+            .total-info p { font-size: 15px; }
+        }
+
+        .total-box {
+            background: var(--surface-2);
+            padding: 14px 14px;
+            border-top: 3px solid #E8EAF0;
+            border-radius: 4px;
+            text-align: right;
+            animation: slideUp 600ms ease-out both;
+            animation-delay: 300ms;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        @media (min-width: 480px) {
+            .total-box { padding: 20px; }
+        }
+
+        .total-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            line-height: 1.2;
+            word-break: break-word;
+        }
+
+        @media (min-width: 480px) {
+            .total-label { font-size: 11px; margin-bottom: 10px; }
+        }
+
+        .total-amount {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--gold);
+            margin-bottom: 12px;
+            line-height: 1;
+            word-break: break-word;
+        }
+
+        @media (min-width: 480px) {
+            .total-amount { font-size: 44px; margin-bottom: 16px; }
+        }
+
+        @media (min-width: 768px) {
+            .total-amount { font-size: 56px; }
+        }
+
+        .total-note {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        @media (min-width: 480px) {
+            .total-note { font-size: 12px; line-height: 1.6; }
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 480px) {
+            .process-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (min-width: 768px) {
+            .process-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        }
+
+        @media (min-width: 1024px) {
+            .process-grid { grid-template-columns: repeat(6, 1fr); }
+        }
+
+        .process-step {
+            background: var(--surface-2);
+            padding: 16px;
+            border-left: 2px solid var(--line);
+            border-radius: 4px;
+            transition: all 200ms ease-out;
+            animation: slideUp 600ms ease-out both;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .process-step:nth-child(1) { animation-delay: 50ms; }
+        .process-step:nth-child(2) { animation-delay: 100ms; }
+        .process-step:nth-child(3) { animation-delay: 150ms; }
+        .process-step:nth-child(4) { animation-delay: 200ms; }
+        .process-step:nth-child(5) { animation-delay: 250ms; }
+        .process-step:nth-child(6) { animation-delay: 300ms; }
+
+        @media (hover: hover) {
+            .process-step:hover {
+                border-left-color: var(--gold);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        .process-step:active { transform: scale(0.98); }
+
+        .process-number {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .process-step h3 {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        @media (min-width: 768px) {
+            .process-step h3 { font-size: 15px; }
+        }
+
+        .process-step p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+        }
+
+        @media (min-width: 768px) {
+            .gallery-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        }
+
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+            border-radius: 4px;
+            background: var(--surface-2);
+            cursor: pointer;
+            transition: all 200ms ease-out;
+            border: 1px solid var(--line);
+            animation: slideUp 600ms ease-out both;
+        }
+
+        .gallery-item:nth-child(n) { animation-delay: calc(n * 40ms); }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 200ms ease-out;
+        }
+
+        @media (hover: hover) {
+            .gallery-item:hover {
+                border-color: var(--gold);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            }
+
+            .gallery-item:hover img {
+                transform: scale(1.08);
+                filter: brightness(1.1);
+            }
+
+            .gallery-label { opacity: 1; }
+        }
+
+        .gallery-item:active { transform: scale(0.96); }
+
+        .gallery-label {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(11, 18, 32, 0.95) 0%, transparent 60%);
+            display: flex;
+            align-items: flex-end;
+            padding: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text);
+            opacity: 0;
+            transition: opacity 200ms ease-out;
+            line-height: 1;
+        }
+
+        #contacts { border-top: 3px solid var(--tri-red); }
+
+        .contacts-info {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        @media (min-width: 768px) {
+            .contacts-info { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        }
+
+        .contact-item {
+            animation: slideUp 600ms ease-out both;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .contact-item:nth-child(1) { animation-delay: 50ms; }
+        .contact-item:nth-child(2) { animation-delay: 100ms; }
+        .contact-item:nth-child(3) { animation-delay: 150ms; }
+
+        .contact-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .contact-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--text);
+            margin-bottom: 4px;
+            transition: color 200ms ease-out;
+            text-decoration: none;
+            line-height: 1.3;
+            word-break: break-word;
+        }
+
+        @media (min-width: 480px) {
+            .contact-value { font-size: 20px; }
+        }
+
+        @media (min-width: 768px) {
+            .contact-value { font-size: 24px; }
+        }
+
+        @media (hover: hover) {
+            .contact-item:hover .contact-value { color: var(--gold); }
+        }
+
+        .contact-desc {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        @media (min-width: 768px) {
+            .contact-desc { font-size: 12px; }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 0;
+            animation: fadeIn 200ms ease-out;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        @media (min-width: 768px) {
+            .modal {
+                align-items: center;
+                padding: 20px;
+                padding-top: max(20px, env(safe-area-inset-top));
+                padding-bottom: max(20px, env(safe-area-inset-bottom));
+            }
+        }
+
+        .modal.active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; backdrop-filter: blur(0); }
+            to { opacity: 1; backdrop-filter: blur(4px); }
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 12px 12px 0 0;
+            padding: 24px 16px;
+            padding-bottom: max(24px, env(safe-area-inset-bottom));
+            width: 100%;
+            max-height: 90svh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            animation: slideUpModal 300ms ease-out;
+            position: relative;
+        }
+
+        @media (min-width: 768px) {
+            .modal-content {
+                border-radius: 8px;
+                padding: 32px;
+                padding-bottom: 32px;
+                max-width: 600px;
+                max-height: 85svh;
+                width: auto;
+            }
+        }
+
+        @keyframes slideUpModal {
+            from { opacity: 0; transform: translateY(100%); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            right: max(16px, env(safe-area-inset-right));
+            background: transparent;
+            border: none;
+            font-size: 28px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 200ms ease-out;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (hover: hover) {
+            .modal-close:hover { color: var(--gold); }
+        }
+
+        .modal h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 36px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
+
+        .modal p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            background: var(--base);
+            border: 1px solid var(--line);
+            border-radius: 4px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 16px;
+            transition: all 200ms ease-out;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--surface-2);
+            box-shadow: 0 0 0 3px rgba(58, 111, 176, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        @media (min-width: 768px) {
+            .form-group textarea { min-height: 100px; }
+        }
+
+        .form-submit {
+            background: var(--text);
+            color: var(--base);
+            padding: 14px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 200ms ease-out;
+            width: 100%;
+            min-height: 48px;
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+
+        .form-submit:active { transform: scale(0.96); opacity: 0.9; }
+
+        @media (hover: hover) {
+            .form-submit:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+            }
+        }
+
+        footer {
+            background: var(--surface-2);
+            border-top: 1px solid var(--line);
+            padding-block: 24px;
+            padding-inline: 16px;
+            padding-inline: max(16px, env(safe-area-inset-left), env(safe-area-inset-right));
+            padding-block-end: max(24px, env(safe-area-inset-bottom));
+        }
+
+        @media (min-width: 768px) {
+            footer { padding-block: 40px; padding-inline: 32px; }
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin-inline: auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        @media (min-width: 480px) {
+            .footer-content { gap: 20px; }
+        }
+
+        @media (min-width: 768px) {
+            .footer-content { grid-template-columns: 2fr 1fr; gap: 32px; }
+        }
+
+        .footer-left {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .footer-left strong {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text);
+        }
+
+        .footer-left p {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        @media (min-width: 768px) {
+            .footer-left p { font-size: 12px; }
+        }
+
+        .footer-right {
+            text-align: left;
+            word-break: break-word;
+        }
+
+        @media (min-width: 768px) {
+            .footer-right { text-align: right; }
+        }
+
+        .footer-right p {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        @media (min-width: 768px) {
+            .footer-right p { font-size: 12px; margin-bottom: 6px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { animation: none !important; transition: none !important; }
+        }
+
+        @media (max-height: 600px) and (orientation: landscape) {
+            .hero { min-height: 100svh; }
+            .hero h1 { font-size: 48px; }
+            .hero-description { font-size: 12px; }
+            .hero-buttons { gap: 8px; }
+            .btn { padding: 10px 16px; min-height: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">
+                <img src="images/kontanta-logo.png" alt="КОНТАНТА" class="logo-icon-img" style="width: 32px; height: 32px; object-fit: contain;">
+                КОНТАНТА
+            </a>
+            <nav>
+                <a href="#benefits">Выплаты</a>
+                <a href="#process">Процесс</a>
+                <a href="#specialties">Должности</a>
+                <a href="#contacts">Контакты</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-subtitle">
+                <div class="hero-logos-container">
+                    <div class="hero-logo-item">
+                        <img src="images/kontanta-logo.png" alt="КОНТАНТА" class="hero-logo-kontanta" loading="eager">
+                    </div>
+                </div>
+                <div class="hero-subtitle-text">
+                    <span class="hero-subtitle-label">Контракт с</span>
+                    <span class="hero-subtitle-org">Министерством Обороны РФ</span>
+                </div>
+            </div>
+            <h1>Контракт с Министерством Обороны РФ</h1>
+            <h1><span>ОТ 2.300.000₽ + 50.000₽ от Москвы </span></h1>
+            <p class="hero-description">Консультирование, юридическое сопровождение и гарантия получения выплат от Москвы и Федерации.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="openModal();">Хочу служить</button>
+                <button class="btn btn-secondary" onclick="openModal();">Консультация</button>
+                <a href="tel:+74954152564" class="btn btn-tertiary">Позвонить</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="benefits">
+        <div class="container">
+            <div class="section-header">
+                <h2>Выплаты <span>при контракте</span></h2>
+                <p>Полная информация о размерах и сроках</p>
+            </div>
+            <div class="payouts-table">
+                <div class="payout-item">
+                    <div class="payout-label">Москва</div>
+                    <div class="payout-amount">1.900.000 ₽</div>
+                    <div class="payout-description">При подписании (Указ Мэра)</div>
+                </div>
+                <div class="payout-item">
+                    <div class="payout-label">Федерация</div>
+                    <div class="payout-amount">400.000 ₽</div>
+                    <div class="payout-description">Указ Президента РФ</div>
+                </div>
+                <div class="payout-item">
+                    <div class="payout-label">Оклад</div>
+                    <div class="payout-amount">220.000+ ₽</div>
+                    <div class="payout-description">Ежемесячно</div>
+                </div>
+                <div class="payout-item">
+                    <div class="payout-label">Москва</div>
+                    <div class="payout-amount">50.000 ₽</div>
+                    <div class="payout-description">Доп выплаты/месяц</div>
+                </div>
+            </div>
+            <div class="total-section">
+                <div class="total-info">
+                    <p><strong>При подписании получаете 2.300.000 ₽</strong> из бюджетов Москвы и РФ.</p>
+                    <p>Затем ежемесячно: 220.000+ (оклад) + 50.000 (Москва) + премии за боевые результаты.</p>
+                </div>
+                <div class="total-box">
+                    <div class="total-label">Сумма при подписании</div>
+                    <div class="total-amount">2.300.000 ₽</div>
+                    <div class="total-note">Ежемесячно:<br>270.000+ ₽</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="process">
+        <div class="container">
+            <div class="section-header">
+                <h2>Как это <span>работает</span></h2>
+                <p>Шесть шагов к подписанию контракта</p>
+            </div>
+            <div class="process-grid">
+                <div class="process-step">
+                    <div><div class="process-number">1/6</div><h3>Заявка</h3></div>
+                    <p>Оставляете контактные данные</p>
+                </div>
+                <div class="process-step">
+                    <div><div class="process-number">2/6</div><h3>Встреча</h3></div>
+                    <p>Консультация с юристом</p>
+                </div>
+                <div class="process-step">
+                    <div><div class="process-number">3/6</div><h3>Подготовка</h3></div>
+                    <p>Сбор документов</p>
+                </div>
+                <div class="process-step">
+                    <div><div class="process-number">4/6</div><h3>Оформление</h3></div>
+                    <p>Подписание контракта</p>
+                </div>
+                <div class="process-step">
+                    <div><div class="process-number">5/6</div><h3>Выплаты</h3></div>
+                    <p>Получение пособия</p>
+                </div>
+                <div class="process-step">
+                    <div><div class="process-number">6/6</div><h3>Служба</h3></div>
+                    <p>Начало контрактной службы</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="specialties">
+        <div class="container">
+            <div class="section-header">
+                <h2>Доступные <span>должности</span></h2>
+                <p>Список специальностей, где требуются контрактники</p>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item"><img src="images/spec-sniper.jpeg" alt="Снайпер" loading="lazy"><div class="gallery-label">Снайпер</div></div>
+                <div class="gallery-item"><img src="images/spec-motor-rifle.jpeg" alt="Мотострелок" loading="lazy"><div class="gallery-label">Мотострелок</div></div>
+                <div class="gallery-item"><img src="images/spec-military-medic.jpeg" alt="Медик" loading="lazy"><div class="gallery-label">Медик</div></div>
+                <div class="gallery-item"><img src="images/spec-engineer-sapper.jpeg" alt="Сапер" loading="lazy"><div class="gallery-label">Сапер</div></div>
+                <div class="gallery-item"><img src="images/spec-fpv-operator.jpeg" alt="Оператор БПЛА" loading="lazy"><div class="gallery-label">Оператор БПЛА</div></div>
+                <div class="gallery-item"><img src="images/spec-tank-crew.jpeg" alt="Танкист" loading="lazy"><div class="gallery-label">Танкист</div></div>
+                <div class="gallery-item"><img src="images/spec-driver-mechanic.jpeg" alt="Водитель" loading="lazy"><div class="gallery-label">Водитель</div></div>
+                <div class="gallery-item"><img src="images/spec-logistics-supply.jpeg" alt="Логист" loading="lazy"><div class="gallery-label">Логист</div></div>
+                <div class="gallery-item"><img src="images/spec-it-specialist.jpeg" alt="IT-специалист" loading="lazy"><div class="gallery-label">IT-специалист</div></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contacts">
+        <div class="container">
+            <div class="section-header">
+                <h2>Контакты</h2>
+                <p>Свяжитесь с нами для консультации</p>
+            </div>
+            <div class="contacts-info">
+                <div class="contact-item">
+                    <div class="contact-label">Телефон</div>
+                    <a href="tel:+74954152564" class="contact-value">+7 (495) 415-25-64</a>
+                    <div class="contact-desc">Рабочее время ежедневно</div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-label">Email</div>
+                    <a href="mailto:kontanta@mos.ru" class="contact-value">kontanta@mos.ru</a>
+                    <div class="contact-desc">Ответ в течение часа</div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-label">Адрес</div>
+                    <div class="contact-value">Западная ул., 16А/1</div>
+                    <div class="contact-desc">м. Щёлковская, Москва</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal" id="contactModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal();">×</button>
+            <h2>Оставить заявку</h2>
+            <p>Специалист свяжется с вами в течение часа</p>
+            <form onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label>Имя</label>
+                    <input type="text" name="name" required placeholder="Иван Иванов">
+                </div>
+                <div class="form-group">
+                    <label>Телефон</label>
+                    <input type="tel" name="phone" required placeholder="+7 (999) 999-99-99" inputmode="tel">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="example@mail.com" inputmode="email">
+                </div>
+                <div class="form-group">
+                    <label>Возраст</label>
+                    <input type="text" name="age" placeholder="Ваш возраст">
+                </div>
+                <div class="form-group">
+                    <label>Сообщение</label>
+                    <textarea name="message" placeholder="Расскажите о себе и причине интереса..."></textarea>
+                </div>
+                <button type="submit" class="form-submit">Отправить</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-left">
+                <strong>КОНТАНТА</strong>
+                <p>Контрактная служба при СВО. Полная информация, юридическая поддержка, гарантия получения выплат.</p>
+            </div>
+            <div class="footer-right">
+                <p><strong>+7 (495) 415-25-64</strong></p>
+                <p>kontanta@mos.ru</p>
+                <p>Западная ул., 16А/1, м. Щёлковская, Москва</p>
+                <p style="margin-top: 12px; font-size: 11px; opacity: 0.6;">© 2024 КОНТАНТА. Выплаты при контрактной службе от 2.3 млн ₽</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function openModal() {
+            document.getElementById('contactModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal() {
+            document.getElementById('contactModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        function handleSubmit(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            fetch('/api/lead-email.php', { method: 'POST', body: formData })
+                .then(r => r.json())
+                .then(d => {
+                    alert(d.message || 'Спасибо! Мы вам позвоним');
+                    e.target.reset();
+                    closeModal();
+                })
+                .catch(() => alert('Ошибка отправки. Позвоните: +7 (495) 415-25-64'));
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+        document.getElementById('contactModal').addEventListener('click', (e) => {
+            if (e.target.id === 'contactModal') closeModal();
+        });
+    </script>
+
+</body>
+</html>

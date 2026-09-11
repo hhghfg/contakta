@@ -1,0 +1,10 @@
+# Перенаправляем все запросы на index.html
+RewriteEngine On
+RewriteBase /контанта/
+
+# Если это не существующий файл или папка
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Перенаправляем на index.html с ключом в querystring
+RewriteRule ^(.+)$ index.html?key=$1 [QSA,L]

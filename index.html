@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0B1220">
+    <meta name="description" content="КОНТАНТА — контрактная служба при СВО. Полная информация и юридическая поддержка.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%230B1220' width='100' height='100'/%3E%3Ctext x='50' y='65' font-size='60' font-weight='900' text-anchor='middle' fill='%23C6A15B'%3EК%3C/text%3E%3C/svg%3E">
+    <title>КОНТАНТА | Контрактная служба</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            /* Базовые */
+            --base: #0B1220;
+            --surface: #121A2B;
+            --surface-2: #1A2438;
+            --line: #2A3650;
+            
+            /* Основной акцент */
+            --primary: #3A6FB0;
+            --primary-dark: #24466F;
+            
+            /* Золото */
+            --gold: #C6A15B;
+            --gold-dark: #8F7038;
+            --gold-light: #E3C88A;
+            
+            /* Текст */
+            --text: #F2F4F8;
+            --text-secondary: #9AA6BC;
+            
+            /* Триколор */
+            --tri-white: #E8EAF0;
+            --tri-blue: #1E3A6E;
+            --tri-red: #8B2A2A;
+            
+            /* Система отступов */
+            --gap-xs: 8px;
+            --gap-sm: 16px;
+            --gap-md: 32px;
+            --gap-lg: 64px;
+            --gap-xl: 128px;
+            --gap-section: 200px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-optical-sizing: auto;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--base);
+            color: var(--text);
+            line-height: 1.6;
+            font-size: 17px;
+            font-weight: 400;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: var(--gold);
+            color: var(--base);
+        }
+
+        /* Скроллбар */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--surface);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold);
+        }
+
+        /* === HEADER === */
+        header {
+            background: var(--base);
+            border-bottom: 1px solid var(--line);
+            padding: var(--gap-sm) var(--gap-md);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--gap-lg);
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--gap-xs);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--gold);
+            font-size: 14px;
+        }
+
+        nav {
+            display: flex;
+            gap: var(--gap-lg);
+            align-items: center;
+        }
+
+        nav a {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: color 200ms cubic-bezier(0.16, 1, 0.3, 1);
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--gold);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: width 200ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            nav { display: none; }
+            .header-content { gap: var(--gap-md); }
+        }
+
+        /* === HERO === */
+        .hero {
+            background: linear-gradient(135deg, var(--base) 0%, var(--surface-2) 100%);
+            position: relative;
+            padding: var(--gap-xl) var(--gap-md);
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: var(--gap-xl);
+            overflow: hidden;
+        }
+
+        /* Боец позади ВСЕМУ, полупрозрачный */
+        .hero::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 50%;
+            background: url('images/hero-operator.jpg') right center / cover no-repeat;
+            opacity: 0.22;
+            pointer-events: none;
+            z-index: 1;
+            filter: brightness(1.2) contrast(1.1);
+        }
+
+        /* Градиентный оверлей слева */
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, var(--base) 0%, rgba(11,18,32,0.5) 35%, transparent 100%);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .hero-left {
+            position: relative;
+            z-index: 3;
+            max-width: 620px;
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 128px;
+            font-weight: 700;
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            margin-bottom: var(--gap-lg);
+            animation: fadeInUp 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .hero-left h1 span {
+            color: var(--gold);
+            display: inline-block;
+            font-weight: 500;
+            font-size: 0.65em;
+            vertical-align: top;
+            margin-left: 0.2em;
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: var(--gap-lg);
+            animation: fadeInUp 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+            animation-delay: 120ms;
+        }
+
+        .hero-description {
+            font-size: 20px;
+            line-height: 1.7;
+            color: var(--text);
+            margin-bottom: var(--gap-xl);
+            max-width: 500px;
+            animation: fadeInUp 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+            animation-delay: 240ms;
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: var(--gap-md);
+            animation: fadeInUp 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+            animation-delay: 400ms;
+        }
+
+        /* === КНОПКИ (ИЕРАРХИЯ) === */
+
+        /* PRIMARY: светлая, текст тёмный, золотая точка */
+        .btn-primary {
+            background: var(--text);
+            color: var(--base);
+            padding: 22px 32px;
+            min-width: 320px;
+            text-align: left;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+        }
+
+        .btn-primary::after {
+            content: '●';
+            color: var(--gold);
+            font-size: 6px;
+            width: 6px;
+            height: 6px;
+            flex-shrink: 0;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-primary svg {
+            width: 4px;
+            height: 8px;
+            margin-left: 8px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+            transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-primary:hover svg {
+            transform: translateX(4px);
+        }
+
+        /* SECONDARY: обводка, текст светлый */
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            padding: 20px 28px;
+            min-width: 280px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: none;
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            cursor: pointer;
+            transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            display: block;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            background: rgba(58, 111, 176, 0.08);
+            transform: translateY(-2px);
+        }
+
+        /* TERTIARY: текстовая, золотое подчёркивание */
+        .btn-tertiary {
+            background: transparent;
+            color: var(--text-secondary);
+            padding: 0;
+            border: none;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            text-decoration: none;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 200ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-tertiary::after {
+            content: '→';
+            display: inline;
+        }
+
+        .btn-tertiary::before {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: width 200ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-tertiary:hover {
+            color: var(--gold);
+        }
+
+        .btn-tertiary:hover::before {
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                grid-template-columns: 1fr;
+                min-height: auto;
+                gap: var(--gap-lg);
+                padding: var(--gap-lg) var(--gap-md);
+            }
+            .hero-left h1 { font-size: 56px; }
+            .btn-primary, .btn-secondary { min-width: 100%; }
+        }
+
+        /* === HERO RIGHT: ИЗОБРАЖЕНИЕ === */
+        .hero-right {
+            position: relative;
+            z-index: 2;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-image-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Двойная вуаль */
+        .hero-image-veil-1 {
+            position: absolute;
+            inset: -40px;
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            opacity: 0.3;
+            animation: Ken-Burns 12s cubic-bezier(0.33, 0.66, 0.66, 1) infinite alternate;
+        }
+
+        .hero-image-veil-2 {
+            position: absolute;
+            inset: -80px;
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            opacity: 0.1;
+            animation: Ken-Burns 16s cubic-bezier(0.33, 0.66, 0.66, 1) infinite alternate reverse;
+        }
+
+        /* Ken Burns эффект на изображении */
+        .hero-image {
+            width: 480px;
+            height: 600px;
+            background: url('images/hero-operator.jpg') center / cover no-repeat;
+            position: relative;
+            z-index: 2;
+            border-radius: 2px;
+            animation: Ken-Burns 8s cubic-bezier(0.33, 0.66, 0.66, 1) infinite alternate;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3), inset 0 0 0 1px var(--line);
+        }
+
+        @keyframes Ken-Burns {
+            0% { transform: scale(1) translateZ(0); }
+            100% { transform: scale(1.02) translateZ(0); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+                filter: blur(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-right { height: 400px; }
+            .hero-image { width: 100%; height: 100%; max-width: 400px; }
+            .hero-image-veil-1, .hero-image-veil-2 { display: none; }
+        }
+
+        /* === CONTAINER === */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--gap-md);
+        }
+
+        /* === SECTION === */
+        section {
+            padding: var(--gap-section) var(--gap-md);
+            background: var(--base);
+            border-bottom: 1px solid var(--line);
+            position: relative;
+        }
+
+        section:nth-child(even) {
+            background: var(--surface);
+        }
+
+        /* === ВЫПЛАТЫ (ОБЪЕДИНЁННАЯ) === */
+        #payouts {
+            padding: var(--gap-section) var(--gap-md);
+        }
+
+        .section-header {
+            margin-bottom: var(--gap-lg);
+            animation: fadeInUp 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .section-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 72px;
+            font-weight: 600;
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            margin-bottom: var(--gap-md);
+        }
+
+        .section-header h2 span {
+            color: var(--gold);
+        }
+
+        .section-header p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 540px;
+            line-height: 1.8;
+        }
+
+        /* Таблица выплат (12-колонная сетка) */
+        .payouts-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: var(--gap-lg);
+            margin-bottom: var(--gap-xl);
+        }
+
+        .payout-item {
+            padding: var(--gap-lg);
+            background: var(--surface-2);
+            border-left: 3px solid var(--primary);
+            border-radius: 2px;
+            transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+            animation: fadeInUp 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .payout-item:nth-child(2) { animation-delay: 100ms; }
+        .payout-item:nth-child(3) { animation-delay: 200ms; }
+        .payout-item:nth-child(4) { animation-delay: 300ms; }
+
+        .payout-item:hover {
+            border-left-color: var(--gold);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .payout-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: var(--gap-sm);
+        }
+
+        .payout-amount {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--gold);
+            margin-bottom: var(--gap-sm);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .payout-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Итого блок с триколором */
+        .total-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--gap-xl);
+            align-items: end;
+            margin-top: var(--gap-xl);
+        }
+
+        .total-info p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: var(--gap-sm);
+            line-height: 1.8;
+        }
+
+        .total-box {
+            background: var(--surface-2);
+            padding: var(--gap-lg);
+            border-top: 3px solid var(--tri-white);
+            border-radius: 2px;
+            text-align: right;
+            animation: fadeInUp 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+            animation-delay: 400ms;
+        }
+
+        .total-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: var(--gap-sm);
+        }
+
+        .total-amount {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 64px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--gold);
+            margin-bottom: var(--gap-md);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .total-note {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .payouts-table { grid-template-columns: 1fr 1fr; gap: var(--gap-md); }
+            .total-section { grid-template-columns: 1fr; }
+            .section-header h2 { font-size: 48px; }
+        }
+
+        /* === ПРОЦЕСС === */
+        #process {
+            padding: var(--gap-section) var(--gap-md);
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: var(--gap-md);
+        }
+
+        .process-step {
+            background: var(--surface-2);
+            padding: var(--gap-md);
+            border-left: 2px solid var(--line);
+            border-radius: 2px;
+            transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+            animation: fadeInUp 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .process-step:nth-child(1) { animation-delay: 0ms; }
+        .process-step:nth-child(2) { animation-delay: 80ms; }
+        .process-step:nth-child(3) { animation-delay: 160ms; }
+        .process-step:nth-child(4) { animation-delay: 240ms; }
+        .process-step:nth-child(5) { animation-delay: 320ms; }
+        .process-step:nth-child(6) { animation-delay: 400ms; }
+
+        .process-step:hover {
+            border-left-color: var(--gold);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .process-number {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: var(--gap-sm);
+        }
+
+        .process-step h3 {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--text);
+            margin-bottom: var(--gap-xs);
+        }
+
+        .process-step p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .process-grid { grid-template-columns: repeat(3, 1fr); gap: var(--gap-sm); }
+        }
+
+        @media (max-width: 480px) {
+            .process-grid { grid-template-columns: 1fr; }
+        }
+
+        /* === ДОЛЖНОСТИ === */
+        #specialties {
+            padding: var(--gap-section) var(--gap-md);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--gap-md);
+        }
+
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+            border-radius: 2px;
+            background: var(--surface-2);
+            cursor: pointer;
+            transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid var(--line);
+            animation: fadeInUp 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .gallery-item:nth-child(n) { animation-delay: calc(n * 60ms); }
+
+        .gallery-item:hover {
+            border-color: var(--gold);
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+
+        .gallery-label {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(11, 18, 32, 0.9) 0%, transparent 50%);
+            display: flex;
+            align-items: flex-end;
+            padding: var(--gap-md);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text);
+            opacity: 0;
+            transition: opacity 200ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .gallery-item:hover .gallery-label {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-grid { grid-template-columns: 1fr; }
+        }
+
+        /* === КОНТАКТЫ === */
+        #contacts {
+            padding: var(--gap-section) var(--gap-md);
+            border-top: 3px solid var(--tri-red);
+        }
+
+        .contacts-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--gap-xl);
+            margin-bottom: var(--gap-xl);
+        }
+
+        .contact-item {
+            animation: fadeInUp 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .contact-item:nth-child(2) { animation-delay: 100ms; }
+        .contact-item:nth-child(3) { animation-delay: 200ms; }
+
+        .contact-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: var(--gap-sm);
+        }
+
+        .contact-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--text);
+            margin-bottom: var(--gap-xs);
+            transition: color 200ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .contact-item:hover .contact-value {
+            color: var(--gold);
+        }
+
+        .contact-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* === MODAL FORM (скрыта по умолчанию) === */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: var(--gap-md);
+            animation: fadeIn 200ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            padding: var(--gap-lg);
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 300ms cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: var(--gap-md);
+            right: var(--gap-md);
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 200ms cubic-bezier(0.16, 1, 0.3, 1);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            color: var(--gold);
+        }
+
+        .modal h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            margin-bottom: var(--gap-sm);
+        }
+
+        .modal p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: var(--gap-lg);
+        }
+
+        .form-group {
+            margin-bottom: var(--gap-md);
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: var(--gap-xs);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: var(--gap-sm);
+            background: var(--base);
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--surface-2);
+            box-shadow: 0 0 0 3px rgba(58, 111, 176, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-submit {
+            background: var(--text);
+            color: var(--base);
+            padding: var(--gap-md) var(--gap-lg);
+            border: none;
+            border-radius: 2px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+            width: 100%;
+        }
+
+        .form-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        }
+
+        /* === FOOTER === */
+        footer {
+            background: var(--surface-2);
+            border-top: 1px solid var(--line);
+            padding: var(--gap-lg) var(--gap-md);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--gap-xl);
+            align-items: start;
+        }
+
+        .footer-left {
+            display: flex;
+            flex-direction: column;
+            gap: var(--gap-sm);
+        }
+
+        .footer-left strong {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text);
+        }
+
+        .footer-left p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .footer-right {
+            text-align: right;
+        }
+
+        .footer-right p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: var(--gap-sm);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            footer { grid-template-columns: 1fr; gap: var(--gap-lg); .footer-right { text-align: left; } }
+        }
+
+        /* === ACCESSIBILITY === */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            /* Уже dark */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">
+                <span class="logo-icon">К</span>
+                КОНТАНТА
+            </a>
+            <nav>
+                <a href="#payouts">Выплаты</a>
+                <a href="#process">Процесс</a>
+                <a href="#specialties">Должности</a>
+                <a href="#contacts">Контакты</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-left">
+            <div class="hero-subtitle">Контрактная служба при СВО</div>
+            <h1>Контракт<span>2.3M ₽</span></h1>
+            <p class="hero-description">
+                Единовременная выплата 2 миллиона 300 тысяч рублей при подписании контракта. Полное консультирование, юридическое сопровождение и гарантия получения всех положенных выплат от Москвы и Федерации.
+            </p>
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="document.querySelector('.modal').classList.add('active');">
+                    Хочу служить
+                    <svg viewBox="0 0 12 12" width="12" height="12">
+                        <polyline points="2,2 10,6 2,10" />
+                    </svg>
+                </button>
+                <button class="btn-secondary" onclick="document.querySelector('.modal').classList.add('active');">
+                    Хочу консультацию
+                </button>
+                <a href="tel:+74954152564" class="btn-tertiary">
+                    Связаться
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-right">
+            <div class="hero-image-container">
+                <div class="hero-image-veil-1"></div>
+                <div class="hero-image-veil-2"></div>
+                <div class="hero-image"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ВЫПЛАТЫ -->
+    <section id="payouts">
+        <div class="container">
+            <div class="section-header">
+                <h2>Выплаты <span>при контракте</span></h2>
+                <p>Полная информация о размерах и сроках</p>
+            </div>
+
+            <div class="payouts-table">
+                <div class="payout-item">
+                    <div class="payout-label">Выплата г. Москвы</div>
+                    <div class="payout-amount">1&nbsp;900&nbsp;000 ₽</div>
+                    <div class="payout-description">Единовременно при подписании контракта (Указ Мэра Москвы от 23.07.2024)</div>
+                </div>
+
+                <div class="payout-item">
+                    <div class="payout-label">Федеральная выплата</div>
+                    <div class="payout-amount">400&nbsp;000 ₽</div>
+                    <div class="payout-description">Указ Президента РФ от 31.07.2024 № 644</div>
+                </div>
+
+                <div class="payout-item">
+                    <div class="payout-label">Ежемесячный оклад</div>
+                    <div class="payout-amount">от 220&nbsp;000 ₽</div>
+                    <div class="payout-description">В зависимости от звания, должности и выслуги</div>
+                </div>
+
+                <div class="payout-item">
+                    <div class="payout-label">Дополнительно ежемесячно</div>
+                    <div class="payout-amount">50&nbsp;000 ₽</div>
+                    <div class="payout-description">Выплаты Правительства Москвы (Указ № 52-УМ)</div>
+                </div>
+            </div>
+
+            <div class="total-section">
+                <div class="total-info">
+                    <p><strong>При подписании контракта вы получаете:</strong> единовременно <strong>2 300 000 рублей</strong> из федерального бюджета и бюджета Москвы.</p>
+                    <p>Затем — ежемесячный оклад от 220 000 ₽ плюс дополнительные выплаты Москвы (50 000 ₽/мес) и премии за боевые результаты.</p>
+                    <p style="margin-top: var(--gap-md); font-size: 13px; color: var(--text-secondary);">Согласно Указам Президента РФ и Мэра Москвы, документы опубликованы в официальных источниках.</p>
+                </div>
+                <div class="total-box">
+                    <div class="total-label">При подписании</div>
+                    <div class="total-amount">2 300 000 ₽</div>
+                    <div class="total-note">Москва + Федерация<br><br><strong>Ежемесячно:</strong><br>220K+ + 50K = 270K+ ₽</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ПРОЦЕСС -->
+    <section id="process">
+        <div class="container">
+            <div class="section-header">
+                <h2>Как это <span>работает</span></h2>
+                <p>Шесть шагов к подписанию контракта</p>
+            </div>
+
+            <div class="process-grid">
+                <div class="process-step">
+                    <div class="process-number">1/6</div>
+                    <h3>Заявка</h3>
+                    <p>Оставляете контактные данные через форму</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-number">2/6</div>
+                    <h3>Встреча</h3>
+                    <p>Консультация с юристом и специалистом</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-number">3/6</div>
+                    <h3>Подготовка</h3>
+                    <p>Сбор документов и медкомиссия</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-number">4/6</div>
+                    <h3>Оформление</h3>
+                    <p>Подписание контракта в военкомате</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-number">5/6</div>
+                    <h3>Выплаты</h3>
+                    <p>Получение единовременного пособия</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-number">6/6</div>
+                    <h3>Служба</h3>
+                    <p>Начало контрактной деятельности</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ДОЛЖНОСТИ -->
+    <section id="specialties">
+        <div class="container">
+            <div class="section-header">
+                <h2>Доступные <span>должности</span></h2>
+                <p>Список специальностей, где требуются контрактники</p>
+            </div>
+
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="images/spec-sniper.jpeg" alt="Снайпер">
+                    <div class="gallery-label">Снайпер</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/spec-motor-rifle.jpeg" alt="Мотострелок">
+                    <div class="gallery-label">Мотострелок</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/spec-military-medic.jpeg" alt="Медик">
+                    <div class="gallery-label">Медик</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/spec-engineer-sapper.jpeg" alt="Сапер">
+                    <div class="gallery-label">Сапер</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/spec-fpv-operator.jpeg" alt="Оператор БПЛА">
+                    <div class="gallery-label">Оператор БПЛА</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/spec-tank-crew.jpeg" alt="Танкист">
+                    <div class="gallery-label">Танкист</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/spec-driver-mechanic.jpeg" alt="Водитель">
+                    <div class="gallery-label">Водитель</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/spec-logistics-supply.jpeg" alt="Логист">
+                    <div class="gallery-label">Логист</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/spec-it-specialist.jpeg" alt="IT-специалист">
+                    <div class="gallery-label">IT-специалист</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- КОНТАКТЫ -->
+    <section id="contacts">
+        <div class="container">
+            <div class="section-header">
+                <h2>Контакты</h2>
+                <p>Свяжитесь с нами для консультации</p>
+            </div>
+
+            <div class="contacts-info">
+                <div class="contact-item">
+                    <div class="contact-label">Телефон</div>
+                    <a href="tel:+74954152564" style="text-decoration: none;">
+                        <div class="contact-value">+7 (495) 415-25-64</div>
+                    </a>
+                    <div class="contact-desc">Звоните в рабочее время</div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-label">Email</div>
+                    <a href="mailto:kontanta@mos.ru" style="text-decoration: none;">
+                        <div class="contact-value">kontanta@mos.ru</div>
+                    </a>
+                    <div class="contact-desc">Отвечаем в течение часа</div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-label">Адрес</div>
+                    <div class="contact-value">Западная ул., 16А/1</div>
+                    <div class="contact-desc">м. Щёлковская, Москва</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODAL FORM -->
+    <div class="modal" id="contactModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="this.closest('.modal').classList.remove('active');">×</button>
+            <h2>Оставить заявку</h2>
+            <p>Наш специалист свяжется с вами в течение одного часа</p>
+            
+            <form onsubmit="event.preventDefault(); fetch('/api/lead-email.php', {method: 'POST', body: new FormData(this)}).then(r => r.json()).then(d => {alert(d.message); this.reset(); document.querySelector('.modal').classList.remove('active');}).catch(e => alert('Ошибка отправки'));">
+                <div class="form-group">
+                    <label>Имя</label>
+                    <input type="text" name="name" required placeholder="Иван Иванов">
+                </div>
+                <div class="form-group">
+                    <label>Телефон</label>
+                    <input type="tel" name="phone" required placeholder="+7 (999) 999-99-99">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="example@mail.com">
+                </div>
+                <div class="form-group">
+                    <label>Возраст</label>
+                    <input type="text" name="age" placeholder="Ваш возраст">
+                </div>
+                <div class="form-group">
+                    <label>Сообщение</label>
+                    <textarea name="message" placeholder="Расскажите о себе, опыте, причине интереса..."></textarea>
+                </div>
+                <button type="submit" class="form-submit">Отправить</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-left">
+            <strong>КОНТАНТА</strong>
+            <p>Контрактная служба при СВО. Полная информация, юридическая поддержка, гарантия получения выплат.</p>
+        </div>
+        <div class="footer-right">
+            <p><strong>+7 (495) 415-25-64</strong></p>
+            <p>kontanta@mos.ru</p>
+            <p>Западная ул., 16А/1, м. Щёлковская, Москва</p>
+            <p style="margin-top: var(--gap-lg); font-size: 11px; opacity: 0.5;">© 2024 КОНТАНТА. Выплаты при контрактной службе от 2.3 млн ₽</p>
+        </div>
+    </footer>
+
+    <!-- CLOSE MODAL ON ESC -->
+    <script>
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelector('.modal').classList.remove('active');
+            }
+        });
+
+        // Close modal on background click
+        document.querySelector('.modal').addEventListener('click', (e) => {
+            if (e.target === document.querySelector('.modal')) {
+                document.querySelector('.modal').classList.remove('active');
+            }
+        });
+    </script>
+
+</body>
+</html>

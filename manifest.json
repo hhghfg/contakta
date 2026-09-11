@@ -1,0 +1,99 @@
+{
+  "name": "КОНТАНТА - Админ-панель",
+  "short_name": "КОНТАНТА",
+  "description": "Максимально прокачанная администраторская панель для управления заявками и сессиями",
+  "start_url": "/admin-pro.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a0e27",
+  "theme_color": "#d4af37",
+  "lang": "ru-RU",
+  
+  "icons": [
+    {
+      "src": "/images/kontanta-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/kontanta-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/kontanta-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/images/kontanta-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  
+  "screenshots": [
+    {
+      "src": "/images/kontanta-logo.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "КОНТАНТА Админ-панель"
+    },
+    {
+      "src": "/images/kontanta-logo.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "КОНТАНТА Админ-панель"
+    }
+  ],
+  
+  "categories": ["business", "productivity"],
+  "screenshots_urls": [],
+  
+  "shortcuts": [
+    {
+      "name": "Заявки",
+      "short_name": "Заявки",
+      "description": "Открыть список заявок",
+      "url": "/admin-pro.html?tab=leads",
+      "icons": [
+        {
+          "src": "/images/kontanta-logo.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Сессии",
+      "short_name": "Сессии",
+      "description": "Просмотреть активные сессии",
+      "url": "/admin-pro.html?tab=sessions",
+      "icons": [
+        {
+          "src": "/images/kontanta-logo.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  
+  "share_target": {
+    "action": "/admin-pro.html",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "text": "text"
+    }
+  },
+  
+  "prefer_related_applications": false
+}
